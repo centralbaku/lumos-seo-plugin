@@ -6,6 +6,13 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.10.2] — 2026-04-28
+
+### Added
+- **WordPress.org plugin assets** — added high-DPI icon `icon-256x256.png` and localized retina banners `banner-1544x500-rtl.png`, `banner-1544x500-es.png`, and `banner-1544x500-es_ES.png`.
+
+---
+
 ## [1.10.1] — 2026-04-28
 
 ### Fixed
