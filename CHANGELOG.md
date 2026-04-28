@@ -6,6 +6,18 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.10.6] — 2026-04-28
+
+### Added
+- **SE Ranking-style Audit Dashboard shell** — added a full admin dashboard shell with sidebar navigation and topbar page context.
+- **Audit workflow pages** — implemented functional pages for Create Audit, Live Crawl Progress, Overview, Crawled Pages, Found Resources, and Issue Report.
+- **Run Audit interaction** — added simulated crawl run flow with live counters and timer updates for functional page testing.
+
+### Changed
+- **Dashboard assets and mounting** — re-enabled dedicated dashboard JS/CSS asset loading on `Lumos SEO → Dashboard` and replaced static description-only output with app container rendering.
+
+---
+
 ## [1.10.5] — 2026-04-28
 
 ### Fixed

@@ -53,6 +53,15 @@ class Lumos_SEO_Admin {
     }
 
     public function enqueue_admin_assets( $hook ) {
+        if ( $hook === 'toplevel_page_lumos-seo-dashboard' || $hook === 'lumos-seo_page_lumos-seo-dashboard' ) {
+            wp_enqueue_style( 'lumos-seo-audit-dashboard', LUMOS_SEO_URL . 'assets/css/dashboard.css', [], LUMOS_SEO_VERSION );
+            wp_enqueue_script( 'lumos-seo-audit-dashboard', LUMOS_SEO_URL . 'assets/js/dashboard.js', [ 'jquery' ], LUMOS_SEO_VERSION, true );
+            wp_localize_script( 'lumos-seo-audit-dashboard', 'lumosAuditDash', [
+                'siteUrl' => home_url( '/' ),
+                'now'     => current_time( 'timestamp' ),
+            ] );
+        }
+
         if ( $hook === 'lumos-seo-dashboard_page_lumos-seo' ) {
             wp_enqueue_media();
         }
@@ -60,9 +69,10 @@ class Lumos_SEO_Admin {
 
     public function dashboard_page() {
         ?>
-        <div class="wrap">
-            <h1>Lumos SEO Dashboard</h1>
-            <p class="description">Track SEO performance, keyword strategy, rankings, SERP insights, sitemap optimization, and implementation tasks.</p>
+        <div class="wrap lumos-audit-wrap">
+            <h1>Lumos SEO Audit Dashboard</h1>
+            <p class="description">SE Ranking-style technical audit workspace for overview, audit execution, crawled pages, found resources, and issue reporting.</p>
+            <div id="lumos-audit-app"></div>
         </div>
         <?php
     }

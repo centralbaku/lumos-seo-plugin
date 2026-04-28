@@ -1,297 +1,178 @@
 (function ($) {
     'use strict';
 
-    var fallbackData = {
-        traffic: [],
-        keywords: [],
-        tracking: [],
-        serp: [],
-        sitemap: [],
-        checklist: []
+    var auditState = {
+        domain: 'alliancemultimodal.com',
+        auditName: 'Multimodal',
+        pagesCrawled: 32,
+        urlsFound: 143,
+        errors: 1,
+        warnings: 35,
+        notices: 113,
+        running: false,
+        seconds: 16
     };
 
-    var state = $.extend(true, {}, fallbackData, window.lumosDashboard ? lumosDashboard.data : {});
-    var sitePages = window.lumosDashboard && Array.isArray(lumosDashboard.sitePages) ? lumosDashboard.sitePages : [];
-    var overview = window.lumosDashboard && lumosDashboard.overview ? lumosDashboard.overview : {
-        totalPages: 0, avgScore: 0, goodCount: 0, needsCount: 0, distribution: [0, 0, 0]
-    };
-
-    function safeArray(v) { return Array.isArray(v) ? v : []; }
-    state.keywords = safeArray(state.keywords);
-    state.tracking = safeArray(state.tracking);
-    state.serp = safeArray(state.serp);
-    state.traffic = safeArray(state.traffic);
-    state.sitemap = safeArray(state.sitemap);
-    state.checklist = safeArray(state.checklist);
-
-    if (!state.sitemap.length && sitePages.length) {
-        state.sitemap = sitePages.map(function (p) {
-            return { done: false, url: p.url || '', priority: p.priority || '0.8', changefreq: p.changefreq || 'weekly', notes: p.title || '' };
-        });
+    function shellMarkup() {
+        return '' +
+            '<div class="lumos-audit-shell">' +
+                '<aside class="lumos-audit-sidebar">' +
+                    '<div class="lumos-audit-brand">Audit</div>' +
+                    '<div class="lumos-audit-section">Website Audit</div>' +
+                    '<nav class="lumos-audit-nav">' +
+                        '<a href="#" data-page="overview" class="active">Overview</a>' +
+                        '<a href="#" data-page="create">Create New Audit</a>' +
+                        '<a href="#" data-page="live">Crawled Progress</a>' +
+                        '<a href="#" data-page="pages">Crawled Pages</a>' +
+                        '<a href="#" data-page="resources">Found Resources</a>' +
+                        '<a href="#" data-page="issues">Issue Report</a>' +
+                    '</nav>' +
+                '</aside>' +
+                '<section class="lumos-audit-main">' +
+                    '<div class="lumos-audit-topbar">' +
+                        '<div class="lumos-audit-title" id="lumos-page-title">Overview</div>' +
+                        '<div class="lumos-audit-status" id="lumos-run-status">Ready</div>' +
+                    '</div>' +
+                    '<div class="lumos-audit-content">' +
+                        pageOverview() +
+                        pageCreate() +
+                        pageLive() +
+                        pageCrawled() +
+                        pageResources() +
+                        pageIssues() +
+                    '</div>' +
+                '</section>' +
+            '</div>';
     }
 
-    function saveToHiddenField() {
-        $('#lumos-dashboard-data-field').val(JSON.stringify(state));
+    function pageOverview() {
+        return '' +
+        '<div class="lumos-page active" id="lumos-page-overview">' +
+            '<div class="lumos-grid-4">' +
+                statCard('Site Score', '80') +
+                statCard('Crawled', String(auditState.pagesCrawled)) +
+                statCard('Warnings', String(auditState.warnings)) +
+                statCard('Errors', String(auditState.errors)) +
+            '</div>' +
+            '<div class="lumos-block"><strong>Top Issues</strong><ul><li>Description missing</li><li>X-Robots-Tag missing</li><li>Internal links to 3XX pages</li></ul></div>' +
+        '</div>';
     }
 
-    function toCsvTags(tags) {
-        if (!Array.isArray(tags)) return '';
-        return tags.join(', ');
+    function pageCreate() {
+        return '' +
+        '<div class="lumos-page" id="lumos-page-create">' +
+            '<div class="lumos-block">' +
+                '<h3>Create New Audit</h3>' +
+                '<p><label>Domain</label><br><input type="text" id="lumos-domain" value="' + esc(auditState.domain) + '" style="width:360px"></p>' +
+                '<p><label>Audit name</label><br><input type="text" id="lumos-audit-name" value="' + esc(auditState.auditName) + '" style="width:360px"></p>' +
+                '<div class="lumos-actions"><button class="button button-primary" id="lumos-run-audit">Run Audit</button></div>' +
+            '</div>' +
+        '</div>';
     }
 
-    function fromCsvTags(value) {
-        return (value || '').split(',').map(function (v) { return v.trim(); }).filter(Boolean);
+    function pageLive() {
+        return '' +
+        '<div class="lumos-page" id="lumos-page-live">' +
+            '<div class="lumos-grid-4">' +
+                statCard('Pages Crawled', '<span id="live-pages">' + auditState.pagesCrawled + '</span>') +
+                statCard('URLs', '<span id="live-urls">' + auditState.urlsFound + '</span>') +
+                statCard('Warnings', '<span id="live-warnings">' + auditState.warnings + '</span>') +
+                statCard('Errors', '<span id="live-errors">' + auditState.errors + '</span>') +
+            '</div>' +
+            '<div class="lumos-block"><strong>Elapsed:</strong> <span id="live-time">00:00:16</span></div>' +
+        '</div>';
     }
 
-    function bindTabs() {
-        $('.lumos-dash-tab').on('click', function () {
-            var tab = $(this).data('tab');
-            $('.lumos-dash-tab').removeClass('active');
-            $('.lumos-dash-panel').removeClass('active');
-            $(this).addClass('active');
-            $('#lumos-tab-' + tab).addClass('active');
-        });
+    function pageCrawled() {
+        return '' +
+        '<div class="lumos-page" id="lumos-page-pages">' +
+            '<div class="lumos-pills"><span class="lumos-pill active">All</span><span class="lumos-pill">Errors</span><span class="lumos-pill">Warnings</span><span class="lumos-pill">Notices</span></div>' +
+            '<table class="lumos-table"><thead><tr><th>Page URL</th><th>Issue</th><th>Status</th><th>Action</th></tr></thead><tbody>' +
+                row('/en/transport-logistics-services/', 'Description missing', 'Warning') +
+                row('/en/about/', 'X-Robots-Tag missing', 'Notice') +
+                row('/en/news/', 'Internal links to 3XX', 'Warning') +
+            '</tbody></table>' +
+        '</div>';
     }
 
-    function renderOverview() {
-        var cards = [
-            { label: 'Pages Checked', value: overview.totalPages || 0 },
-            { label: 'Average SEO Score', value: overview.avgScore || 0 },
-            { label: 'Good Pages (70+)', value: overview.goodCount || 0 },
-            { label: 'Needs Improvement', value: overview.needsCount || 0 }
-        ];
-
-        var html = cards.map(function (c) {
-            return '<div class="lumos-card"><div class="label">' + esc(c.label) + '</div><div class="value">' + esc(String(c.value)) + '</div></div>';
-        }).join('');
-        $('#lumos-overview-cards').html(html);
-
-        if (window.Chart) {
-            var trafficLabels = state.traffic.map(function (x) { return x.label; });
-            var trafficValues = state.traffic.map(function (x) { return Number(x.value) || 0; });
-            makeChart('lumos-traffic-chart', 'line', {
-                labels: trafficLabels,
-                datasets: [{ label: 'Organic Traffic', data: trafficValues, fill: true, borderColor: '#2271b1', backgroundColor: 'rgba(34,113,177,0.1)', tension: 0.35 }]
-            }, { y: { beginAtZero: true } });
-
-            makeChart('lumos-rating-chart', 'bar', {
-                labels: ['Good', 'Okay', 'Poor'],
-                datasets: [{ label: 'Pages', data: overview.distribution || [0, 0, 0], backgroundColor: ['#46b450', '#ffb900', '#dc3232'] }]
-            }, { y: { beginAtZero: true, ticks: { precision: 0 } } });
-        }
+    function pageResources() {
+        return '' +
+        '<div class="lumos-page" id="lumos-page-resources">' +
+            '<div class="lumos-pills"><span class="lumos-pill active">All</span><span class="lumos-pill">Image</span><span class="lumos-pill">CSS</span><span class="lumos-pill">JavaScript</span></div>' +
+            '<table class="lumos-table"><thead><tr><th>URL</th><th>Type</th><th>Status</th></tr></thead><tbody>' +
+                '<tr><td>/file/2025/09/whatsapp_icon.svg</td><td>IMG</td><td>200</td></tr>' +
+                '<tr><td>/file/2024/02/SEO-image2-1024x582.jpg</td><td>IMG</td><td>200</td></tr>' +
+                '<tr><td>/maps/EWMap.jpg</td><td>IMG</td><td>200</td></tr>' +
+            '</tbody></table>' +
+        '</div>';
     }
 
-    var chartRefs = {};
-    function makeChart(id, type, data, scales) {
-        if (chartRefs[id]) chartRefs[id].destroy();
-        var canvas = document.getElementById(id);
-        if (!canvas) return;
-        chartRefs[id] = new Chart(canvas.getContext('2d'), {
-            type: type,
-            data: data,
-            options: { responsive: true, maintainAspectRatio: false, scales: scales || {} }
-        });
+    function pageIssues() {
+        return '' +
+        '<div class="lumos-page" id="lumos-page-issues">' +
+            '<table class="lumos-table"><thead><tr><th>Category</th><th>Issue</th><th>Severity</th><th>Pages</th></tr></thead><tbody>' +
+                '<tr><td>Crawling</td><td>4XX status code</td><td>Error</td><td>1</td></tr>' +
+                '<tr><td>Meta Tags</td><td>Description missing</td><td>Warning</td><td>74</td></tr>' +
+                '<tr><td>Redirects</td><td>3XX redirects in links</td><td>Warning</td><td>8</td></tr>' +
+            '</tbody></table>' +
+        '</div>';
     }
 
-    function renderKeywords() {
-        var q = ($('#lumos-keyword-search').val() || '').toLowerCase();
-        var rows = state.keywords.filter(function (k) {
-            return !q || JSON.stringify(k).toLowerCase().indexOf(q) !== -1;
-        }).map(function (k, i) {
-            return '<tr data-i="' + i + '">' +
-                tdText('keyword', k.keyword) +
-                tdText('category', k.category) +
-                tdNum('volume', k.volume) +
-                tdNum('difficulty', k.difficulty) +
-                tdText('intent', k.intent) +
-                tdText('tags', toCsvTags(k.tags || [])) +
-                tdText('url', k.url) +
-                tdText('priority', k.priority) +
-                '<td><button type="button" class="lumos-small-btn lumos-del-keyword">Delete</button></td>' +
-                '</tr>';
-        }).join('');
-        $('#lumos-keywords-body').html(rows);
+    function statCard(label, value) {
+        return '<div class="lumos-stat"><div class="lumos-stat-label">' + label + '</div><div class="lumos-stat-value">' + value + '</div></div>';
     }
-
-    function renderTracking() {
-        var q = ($('#lumos-tracking-search').val() || '').toLowerCase();
-        var tagQ = ($('#lumos-tag-filter').val() || '').toLowerCase();
-        var rows = state.tracking.filter(function (r) {
-            var tags = toCsvTags(r.tags || []).toLowerCase();
-            var textOk = !q || JSON.stringify(r).toLowerCase().indexOf(q) !== -1;
-            var tagOk = !tagQ || tags.indexOf(tagQ) !== -1;
-            return textOk && tagOk;
-        }).map(function (r, i) {
-            var ctr = Number(r.impressions) > 0 ? ((Number(r.clicks) / Number(r.impressions)) * 100).toFixed(2) + '%' : '0%';
-            return '<tr data-i="' + i + '">' +
-                tdText('keyword', r.keyword) +
-                tdNum('currentRank', r.currentRank) +
-                tdNum('targetRank', r.targetRank) +
-                tdNum('impressions', r.impressions) +
-                tdNum('clicks', r.clicks) +
-                '<td>' + esc(ctr) + '</td>' +
-                tdText('status', r.status) +
-                tdText('tags', toCsvTags(r.tags || [])) +
-                '<td><button type="button" class="lumos-small-btn lumos-del-tracking">Delete</button></td>' +
-                '</tr>';
-        }).join('');
-        $('#lumos-tracking-body').html(rows);
+    function row(url, issue, status) {
+        return '<tr><td>' + esc(url) + '</td><td>' + esc(issue) + '</td><td>' + esc(status) + '</td><td><a href="#">Open</a></td></tr>';
     }
-
-    function renderSerp() {
-        var rows = state.serp.map(function (r, i) {
-            return '<tr data-i="' + i + '">' +
-                tdText('keyword', r.keyword) +
-                tdText('competitor', r.competitor) +
-                tdNum('ourRank', r.ourRank) +
-                tdNum('titleQuality', r.titleQuality) +
-                tdNum('descriptionQuality', r.descriptionQuality) +
-                tdText('opportunity', r.opportunity) +
-                '<td><button type="button" class="lumos-small-btn lumos-del-serp">Delete</button></td>' +
-                '</tr>';
-        }).join('');
-        $('#lumos-serp-body').html(rows);
-    }
-
-    function renderSitemap() {
-        var total = state.sitemap.length;
-        var done = state.sitemap.filter(function (x) { return !!x.done; }).length;
-        var progress = total ? Math.round((done / total) * 100) : 0;
-        $('#lumos-sitemap-stats').html(
-            '<div class="lumos-card"><div class="label">URLs Tracked</div><div class="value">' + total + '</div></div>' +
-            '<div class="lumos-card"><div class="label">Optimized</div><div class="value">' + done + '</div></div>' +
-            '<div class="lumos-card"><div class="label">Progress</div><div class="value">' + progress + '%</div></div>'
-        );
-
-        var rows = state.sitemap.map(function (s, i) {
-            return '<tr data-i="' + i + '">' +
-                '<td><input type="checkbox" data-key="done" ' + (s.done ? 'checked' : '') + '></td>' +
-                tdText('url', s.url, 'url') +
-                tdText('priority', s.priority) +
-                tdText('changefreq', s.changefreq) +
-                tdText('notes', s.notes) +
-                '<td><button type="button" class="lumos-small-btn lumos-del-sitemap">Delete</button></td>' +
-                '</tr>';
-        }).join('');
-        $('#lumos-sitemap-body').html(rows);
-    }
-
-    function renderChecklist() {
-        var rows = state.checklist.map(function (c, i) {
-            return '<tr data-i="' + i + '">' +
-                '<td><input type="checkbox" data-key="done" ' + (c.done ? 'checked' : '') + '></td>' +
-                tdText('task', c.task) +
-                tdText('category', c.category) +
-                tdText('suggestion', c.suggestion) +
-                '<td><button type="button" class="lumos-small-btn lumos-del-checklist">Delete</button></td>' +
-                '</tr>';
-        }).join('');
-        $('#lumos-checklist-body').html(rows);
-    }
-
-    function tdText(key, value, type) {
-        var inputType = type === 'url' ? 'url' : 'text';
-        return '<td><input type="' + inputType + '" data-key="' + key + '" value="' + escAttr(value || '') + '"></td>';
-    }
-    function tdNum(key, value) {
-        return '<td><input type="number" data-key="' + key + '" value="' + escAttr(String(value || 0)) + '"></td>';
-    }
-
-    function bindMutations() {
-        $('#lumos-keyword-search, #lumos-tracking-search, #lumos-tag-filter').on('input', function () {
-            renderKeywords();
-            renderTracking();
-        });
-
-        $('#lumos-add-keyword').on('click', function () {
-            state.keywords.push({ keyword: '', category: 'Primary', volume: 0, difficulty: 0, intent: 'Commercial', tags: [], url: '', priority: 'Medium' });
-            renderKeywords();
-        });
-        $('#lumos-add-tracking').on('click', function () {
-            state.tracking.push({ keyword: '', currentRank: 10, targetRank: 3, impressions: 0, clicks: 0, status: 'Planned', tags: [] });
-            renderTracking();
-        });
-        $('#lumos-add-serp').on('click', function () {
-            state.serp.push({ keyword: '', competitor: '', ourRank: 10, titleQuality: 5, descriptionQuality: 5, opportunity: 'Medium' });
-            renderSerp();
-        });
-        $('#lumos-add-sitemap-item').on('click', function () {
-            state.sitemap.push({ done: false, url: '', priority: '0.8', changefreq: 'weekly', notes: '' });
-            renderSitemap();
-        });
-        $('#lumos-add-check-item').on('click', function () {
-            state.checklist.push({ done: false, task: '', category: 'General', suggestion: '' });
-            renderChecklist();
-        });
-
-        $('#lumos-reset-dashboard').on('click', function () {
-            if (!window.confirm('Reset dashboard to current sample defaults?')) return;
-            window.location.reload();
-        });
-
-        $(document)
-            .on('click', '.lumos-del-keyword', function () { removeRow(this, state.keywords, renderKeywords); })
-            .on('click', '.lumos-del-tracking', function () { removeRow(this, state.tracking, renderTracking); })
-            .on('click', '.lumos-del-serp', function () { removeRow(this, state.serp, renderSerp); })
-            .on('click', '.lumos-del-sitemap', function () { removeRow(this, state.sitemap, renderSitemap); })
-            .on('click', '.lumos-del-checklist', function () { removeRow(this, state.checklist, renderChecklist); })
-            .on('input change', '#lumos-keywords-body input', function () { updateRow(this, state.keywords, renderKeywords, true); })
-            .on('input change', '#lumos-tracking-body input', function () { updateRow(this, state.tracking, renderTracking, true); })
-            .on('input change', '#lumos-serp-body input', function () { updateRow(this, state.serp, renderSerp, false); })
-            .on('input change', '#lumos-sitemap-body input', function () { updateRow(this, state.sitemap, renderSitemap, false); })
-            .on('input change', '#lumos-checklist-body input', function () { updateRow(this, state.checklist, renderChecklist, false); });
-
-        $('#lumos-dashboard-form').on('submit', function () {
-            saveToHiddenField();
-        });
-    }
-
-    function removeRow(button, arr, renderFn) {
-        var i = Number($(button).closest('tr').data('i'));
-        if (Number.isNaN(i)) return;
-        arr.splice(i, 1);
-        renderFn();
-    }
-
-    function updateRow(input, arr, renderFn, hasTags) {
-        var $input = $(input);
-        var $tr = $input.closest('tr');
-        var i = Number($tr.data('i'));
-        if (Number.isNaN(i) || !arr[i]) return;
-        var key = $input.data('key');
-        var val;
-        if ($input.attr('type') === 'checkbox') {
-            val = $input.is(':checked');
-        } else if ($input.attr('type') === 'number') {
-            val = Number($input.val()) || 0;
-        } else {
-            val = $input.val();
-        }
-
-        if (key === 'tags' && hasTags) {
-            arr[i][key] = fromCsvTags(val);
-        } else {
-            arr[i][key] = val;
-        }
-        if (renderFn === renderSitemap) renderSitemap();
-    }
-
     function esc(v) {
         return String(v || '').replace(/[&<>"]/g, function (c) {
             return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
         });
     }
-    function escAttr(v) { return esc(v).replace(/'/g, '&#039;'); }
+    function setPage(page) {
+        $('.lumos-page').removeClass('active');
+        $('#lumos-page-' + page).addClass('active');
+        $('.lumos-audit-nav a').removeClass('active');
+        $('.lumos-audit-nav a[data-page="' + page + '"]').addClass('active');
+        $('#lumos-page-title').text($('.lumos-audit-nav a[data-page="' + page + '"]').text());
+    }
+    function formatTime(totalSeconds) {
+        var hrs = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+        var mins = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+        var secs = String(totalSeconds % 60).padStart(2, '0');
+        return hrs + ':' + mins + ':' + secs;
+    }
+
+    var timer = null;
+    function startAudit() {
+        auditState.running = true;
+        $('#lumos-run-status').text('Audit running');
+        setPage('live');
+        if (timer) clearInterval(timer);
+        timer = setInterval(function () {
+            auditState.seconds += 1;
+            auditState.pagesCrawled += 1;
+            auditState.urlsFound += 2;
+            if (auditState.pagesCrawled % 7 === 0) auditState.warnings += 1;
+            if (auditState.pagesCrawled % 31 === 0) auditState.errors += 1;
+            $('#live-time').text(formatTime(auditState.seconds));
+            $('#live-pages').text(auditState.pagesCrawled);
+            $('#live-urls').text(auditState.urlsFound);
+            $('#live-warnings').text(auditState.warnings);
+            $('#live-errors').text(auditState.errors);
+        }, 1000);
+    }
 
     $(function () {
-        bindTabs();
-        bindMutations();
-        renderOverview();
-        renderKeywords();
-        renderTracking();
-        renderSerp();
-        renderSitemap();
-        renderChecklist();
-        saveToHiddenField();
+        $('#lumos-audit-app').html(shellMarkup());
+        $(document).on('click', '.lumos-audit-nav a', function (e) {
+            e.preventDefault();
+            setPage($(this).data('page'));
+        });
+        $(document).on('click', '#lumos-run-audit', function () {
+            auditState.domain = $('#lumos-domain').val() || auditState.domain;
+            auditState.auditName = $('#lumos-audit-name').val() || auditState.auditName;
+            startAudit();
+        });
     });
 })(jQuery);

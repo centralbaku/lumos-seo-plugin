@@ -1,115 +1,152 @@
-.lumos-dashboard-wrap {
-    max-width: 1320px;
+.lumos-audit-wrap {
+    max-width: 1600px;
 }
 
-.lumos-dash-tabs {
+.lumos-audit-shell {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    min-height: 760px;
+    border: 1px solid #d0d6e0;
+    background: #f5f7fb;
+}
+
+.lumos-audit-sidebar {
+    background: #1f2d3d;
+    color: #d7e1ee;
+    padding: 12px;
+}
+
+.lumos-audit-brand {
+    font-weight: 700;
+    font-size: 28px;
+    color: #fff;
+    margin: 8px 0 18px;
+}
+
+.lumos-audit-section {
+    margin: 16px 0 6px;
+    color: #a5b4c5;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+}
+
+.lumos-audit-nav a {
     display: flex;
-    gap: 8px;
-    border-bottom: 1px solid #dcdcde;
-    margin: 16px 0;
-    overflow-x: auto;
+    justify-content: space-between;
+    color: #d7e1ee;
+    text-decoration: none;
+    padding: 8px 10px;
+    border-radius: 4px;
+    margin-bottom: 2px;
 }
 
-.lumos-dash-tab {
-    border: 0;
-    border-bottom: 2px solid transparent;
-    background: transparent;
-    padding: 10px 12px;
-    cursor: pointer;
+.lumos-audit-nav a.active,
+.lumos-audit-nav a:hover {
+    background: #2d6ca2;
+    color: #fff;
+}
+
+.lumos-audit-main {
+    background: #f5f7fb;
+}
+
+.lumos-audit-topbar {
+    background: #fff;
+    border-bottom: 1px solid #d6dbe5;
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.lumos-audit-title {
+    font-size: 16px;
     font-weight: 600;
-    color: #50575e;
-    white-space: nowrap;
 }
 
-.lumos-dash-tab.active {
-    color: #2271b1;
-    border-bottom-color: #2271b1;
+.lumos-audit-status {
+    color: #1e7e34;
+    font-weight: 600;
 }
 
-.lumos-dash-panel {
+.lumos-audit-content {
+    padding: 16px;
+}
+
+.lumos-page {
     display: none;
 }
 
-.lumos-dash-panel.active {
+.lumos-page.active {
     display: block;
 }
 
-.lumos-overview-cards {
+.lumos-grid-4 {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 12px;
-    margin-bottom: 16px;
-}
-
-.lumos-card {
-    background: #fff;
-    border: 1px solid #dcdcde;
-    border-left: 3px solid #2271b1;
-    border-radius: 6px;
-    padding: 14px;
-}
-
-.lumos-card .label {
-    color: #646970;
-    font-size: 12px;
-    margin-bottom: 4px;
-}
-
-.lumos-card .value {
-    font-size: 26px;
-    line-height: 1.2;
-    font-weight: 700;
-    color: #1d2327;
-}
-
-.lumos-chart-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 12px;
 }
 
-.lumos-chart-card {
+.lumos-stat {
     background: #fff;
-    border: 1px solid #dcdcde;
-    border-radius: 6px;
+    border: 1px solid #d8dde7;
     padding: 12px;
-    min-height: 280px;
 }
 
-.lumos-actions-row {
+.lumos-stat-label {
+    font-size: 11px;
+    color: #657588;
+}
+
+.lumos-stat-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1d2a3a;
+}
+
+.lumos-block {
+    background: #fff;
+    border: 1px solid #d8dde7;
+    padding: 14px;
+    margin-top: 14px;
+}
+
+.lumos-actions {
     display: flex;
-    gap: 10px;
-    align-items: center;
+    gap: 8px;
     margin-bottom: 10px;
-    flex-wrap: wrap;
 }
 
-.lumos-actions-row input[type="search"] {
-    min-width: 220px;
-}
-
-.lumos-table-wrap {
-    background: #fff;
-    border: 1px solid #dcdcde;
-    border-radius: 6px;
-    overflow: auto;
-}
-
-.lumos-table-wrap table input[type="text"],
-.lumos-table-wrap table input[type="number"],
-.lumos-table-wrap table input[type="url"],
-.lumos-table-wrap table select {
+.lumos-table {
     width: 100%;
+    border-collapse: collapse;
 }
 
-.lumos-small-btn {
-    border: 1px solid #c3c4c7;
-    border-radius: 4px;
-    background: #f6f7f7;
-    cursor: pointer;
-    padding: 3px 8px;
+.lumos-table th,
+.lumos-table td {
+    border: 1px solid #e0e4ec;
+    padding: 8px;
+    text-align: left;
+    font-size: 12px;
 }
 
-.lumos-small-btn:hover {
+.lumos-pills {
+    display: flex;
+    gap: 8px;
+    margin: 8px 0 12px;
+}
+
+.lumos-pill {
+    border: 1px solid #ccd5e2;
     background: #fff;
+    border-radius: 3px;
+    font-size: 11px;
+    padding: 4px 8px;
+}
+
+.lumos-pill.active {
+    background: #5a4f84;
+    border-color: #5a4f84;
+    color: #fff;
 }
