@@ -21,7 +21,7 @@ class Lumos_SEO_Admin {
             'manage_options',
             'lumos-seo-dashboard',
             [ $this, 'dashboard_page' ],
-            LUMOS_SEO_URL . 'assets/icon-menu-20x20.png',
+            $this->get_menu_icon_svg(),
             80
         );
 
@@ -53,15 +53,6 @@ class Lumos_SEO_Admin {
     }
 
     public function enqueue_admin_assets( $hook ) {
-        if ( $hook === 'toplevel_page_lumos-seo-dashboard' || $hook === 'lumos-seo_page_lumos-seo-dashboard' ) {
-            wp_enqueue_style( 'lumos-seo-audit-dashboard', LUMOS_SEO_URL . 'assets/css/dashboard.css', [], LUMOS_SEO_VERSION );
-            wp_enqueue_script( 'lumos-seo-audit-dashboard', LUMOS_SEO_URL . 'assets/js/dashboard.js', [ 'jquery' ], LUMOS_SEO_VERSION, true );
-            wp_localize_script( 'lumos-seo-audit-dashboard', 'lumosAuditDash', [
-                'siteUrl' => home_url( '/' ),
-                'now'     => current_time( 'timestamp' ),
-            ] );
-        }
-
         if ( $hook === 'lumos-seo-dashboard_page_lumos-seo' ) {
             wp_enqueue_media();
         }
@@ -69,12 +60,21 @@ class Lumos_SEO_Admin {
 
     public function dashboard_page() {
         ?>
-        <div class="wrap lumos-audit-wrap">
-            <h1>Lumos SEO Audit Dashboard</h1>
-            <p class="description">SE Ranking-style technical audit workspace for overview, audit execution, crawled pages, found resources, and issue reporting.</p>
-            <div id="lumos-audit-app"></div>
-        </div>
+        <div class="wrap"></div>
         <?php
+    }
+
+    private function get_menu_icon_svg() {
+        $svg_path = LUMOS_SEO_DIR . 'assets/icon.svg';
+        if ( ! file_exists( $svg_path ) || ! is_readable( $svg_path ) ) {
+            return 'dashicons-chart-line';
+        }
+        $svg = file_get_contents( $svg_path );
+        if ( ! $svg ) {
+            return 'dashicons-chart-line';
+        }
+        $svg = preg_replace( '/\s+/', ' ', trim( $svg ) );
+        return 'data:image/svg+xml;base64,' . base64_encode( $svg );
     }
 
     public function settings_page() {

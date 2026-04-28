@@ -6,6 +6,18 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.10.7] — 2026-04-28
+
+### Changed
+- **Dashboard fully emptied** — removed all SE Ranking-style dashboard assets/logic and left `Lumos SEO → Dashboard` as an empty page container.
+- **Admin menu icon switched to SVG** — now uses base64 data URI from `assets/icon.svg` for correct WordPress sidebar SVG rendering.
+
+### Removed
+- `assets/css/dashboard.css`
+- `assets/js/dashboard.js`
+
+---
+
 ## [1.10.6] — 2026-04-28
 
 ### Added
