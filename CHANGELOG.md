@@ -6,6 +6,13 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.6.0] — 2026-04-28
+
+### Added
+- **Auto-updater** (`class-updater.php`) — WordPress now detects new versions automatically via the GitHub Releases API. When a new release is tagged on GitHub, the standard WordPress "Update available" notice appears in wp-admin. One-click update downloads and installs the new zip, with the extracted folder renamed to match the installed plugin folder.
+
+---
+
 ## [1.5.0] — 2026-04-28
 
 ### Fixed
