@@ -6,6 +6,17 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.10.4] — 2026-04-28
+
+### Changed
+- **Dashboard page simplified** — removed dashboard datasets/widgets and kept only the title + description on `Lumos SEO → Dashboard`.
+- **Admin menu icon updated** — replaced dashicon with custom SVG icon (`assets/icon.svg`) for the sidebar branding.
+
+### Removed
+- **Standalone demo HTML removed** — deleted `seo-analytics-dashboard.html`.
+
+---
+
 ## [1.10.3] — 2026-04-28
 
 ### Added
