@@ -6,6 +6,14 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.8.0] — 2026-04-28
+
+### Fixed
+- **Auto-updater: no releases found** — updater was silently failing because no GitHub Release had been created (pushing commits is not the same as publishing a release). Added sanity-check on `tag_name` and clearer back-off logic.
+- **"Check for updates" link** added to the plugin row in wp-admin → Plugins. Clicking it clears the cached release info and the WordPress update transient immediately, so you don't need to wait 12 hours to see a new release.
+
+---
+
 ## [1.7.0] — 2026-04-28
 
 ### Fixed
