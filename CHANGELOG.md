@@ -6,6 +6,13 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.9.3] — 2026-04-28
+
+### Changed
+- **Updater sources expanded** — plugin update checks now resolve in this order: GitHub latest release, then latest git tag, then latest `main` branch commit. This allows WordPress to show update banners even when code is updated in git before a formal GitHub Release is published.
+
+---
+
 ## [1.9.2] — 2026-04-28
 
 ### Fixed
