@@ -24,7 +24,7 @@ class Lumos_SEO_Elementor {
             LUMOS_SEO_VERSION,
             true
         );
-        wp_localize_script( 'lumos-seo-elementor', 'lumoSEO', [
+        wp_localize_script( 'lumos-seo-elementor', 'lumosSEO', [
             'ajaxurl' => admin_url( 'admin-ajax.php' ),
             'nonce'   => wp_create_nonce( 'lumos_seo_nonce' ),
             'post_id' => get_the_ID(),

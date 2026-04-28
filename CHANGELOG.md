@@ -6,6 +6,14 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.7.0] — 2026-04-28
+
+### Fixed
+- **`lumosSEO is not defined`** — `wp_localize_script` in `class-meta-box.php` and `class-elementor.php` was still passing the JS object under the old name `lumoSEO` after the Lumo → Lumos rename. Corrected to `lumosSEO` to match the JS variable name.
+- **Old SEO data not visible** — renaming meta keys from `_lumo_*` to `_lumos_*` left existing post data inaccessible. A one-time migration now runs on activation and on the first `init` after upgrade, copying all `_lumo_*` values to `_lumos_*` keys (only where no new key already exists, so no data is overwritten).
+
+---
+
 ## [1.6.0] — 2026-04-28
 
 ### Added

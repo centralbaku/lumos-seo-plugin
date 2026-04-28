@@ -62,7 +62,7 @@ class Lumos_SEO_Meta_Box {
         wp_enqueue_media();
         wp_enqueue_style( 'lumos-seo', LUMOS_SEO_URL . 'assets/css/admin.css', [], LUMOS_SEO_VERSION );
         wp_enqueue_script( 'lumos-seo', LUMOS_SEO_URL . 'assets/js/admin.js', [ 'jquery' ], LUMOS_SEO_VERSION, true );
-        wp_localize_script( 'lumos-seo', 'lumoSEO', $this->script_data() );
+        wp_localize_script( 'lumos-seo', 'lumosSEO', $this->script_data() );
     }
 
     public function enqueue_block() {
@@ -74,7 +74,7 @@ class Lumos_SEO_Meta_Box {
             LUMOS_SEO_VERSION,
             true
         );
-        wp_localize_script( 'lumos-seo-block', 'lumoSEO', $this->script_data() );
+        wp_localize_script( 'lumos-seo-block', 'lumosSEO', $this->script_data() );
     }
 
     private function script_data() {
