@@ -6,6 +6,16 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.10.3] — 2026-04-28
+
+### Added
+- **Standalone SEO analytics dashboard HTML** — added `seo-analytics-dashboard.html` with sidebar/topbar shell, KPI cards, technical issues list, and a 28-day traffic chart using Charts.css.
+
+### Changed
+- **Dashboard demo styling updated** — switched from dark theme to a light system-font theme and removed Google Fonts dependencies.
+
+---
+
 ## [1.10.2] — 2026-04-28
 
 ### Added
