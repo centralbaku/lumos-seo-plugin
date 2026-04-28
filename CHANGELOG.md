@@ -6,6 +6,14 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.9.1] — 2026-04-28
+
+### Fixed
+- **Import JSON modal clipped by WordPress admin UI** — modal now moves to `document.body` via jQuery `appendTo('body')` on page load, escaping any CSS transform/overflow stacking context created by the meta box container.
+- **Modal z-index too low** — bumped `.lumos-modal-overlay` z-index from `999999` to `9999999` so it reliably sits above the WordPress admin bar (z-index 99999) and Elementor panels.
+
+---
+
 ## [1.8.0] — 2026-04-28
 
 ### Fixed

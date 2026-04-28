@@ -329,6 +329,14 @@
     // ── Import JSON ───────────────────────────────────────────────────────
     var parsedImport = null;
 
+    // Move modal to <body> so position:fixed isn't broken by WP meta box transforms
+    $(function () {
+        var $modal = $('#lumos-import-modal');
+        if ( $modal.length && !$modal.parent().is('body') ) {
+            $modal.appendTo('body');
+        }
+    });
+
     function openModal() {
         $('#lumos-import-modal').show();
         document.body.style.overflow = 'hidden';
