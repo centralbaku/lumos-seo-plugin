@@ -1,0 +1,749 @@
+/* Lumo SEO — Admin / Meta Box styles */
+
+/* ── Base ─────────────────────────────────────────────────────────────────── */
+.lumo-mb {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 13px;
+    color: #1e1e1e;
+}
+
+/* ── Import banner ────────────────────────────────────────────────────────── */
+.lumo-import-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    background: linear-gradient(135deg, #f0f4ff 0%, #faf0ff 100%);
+    border: 1px solid #c5b8e8;
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-bottom: 14px;
+    font-size: 13px;
+}
+
+.lumo-btn-import {
+    flex-shrink: 0;
+    background: #7c3aed;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s;
+}
+.lumo-btn-import:hover { background: #6d28d9; }
+
+/* ── Tabs ─────────────────────────────────────────────────────────────────── */
+.lumo-mb-tabs {
+    display: flex;
+    gap: 2px;
+    border-bottom: 2px solid #ddd;
+    margin-bottom: 16px;
+}
+
+.lumo-mb-tab {
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #555;
+    cursor: pointer;
+    margin-bottom: -2px;
+    transition: color .15s, border-color .15s;
+    white-space: nowrap;
+}
+.lumo-mb-tab:hover  { color: #2271b1; }
+.lumo-mb-tab.active { color: #2271b1; border-bottom-color: #2271b1; }
+
+/* ── Panels ───────────────────────────────────────────────────────────────── */
+.lumo-mb-panel { display: none; }
+.lumo-mb-panel.active { display: block; }
+
+/* ── Field grid ───────────────────────────────────────────────────────────── */
+.lumo-mb-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 20px;
+    margin-bottom: 14px;
+}
+
+.lumo-mb-field { display: flex; flex-direction: column; gap: 4px; }
+.lumo-mb-full  { grid-column: 1 / -1; }
+
+.lumo-mb-field label {
+    font-weight: 600;
+    font-size: 12px;
+    color: #444;
+}
+
+.lumo-field-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2px;
+}
+.lumo-field-header label { margin-bottom: 0; }
+
+/* ── Inputs ───────────────────────────────────────────────────────────────── */
+.lumo-input,
+.lumo-textarea,
+.lumo-select {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    padding: 6px 9px;
+    font-size: 13px;
+    color: #1e1e1e;
+    background: #fff;
+    transition: border-color .15s, box-shadow .15s;
+}
+.lumo-input:focus,
+.lumo-textarea:focus,
+.lumo-select:focus {
+    outline: none;
+    border-color: #2271b1;
+    box-shadow: 0 0 0 2px rgba(34,113,177,.15);
+}
+.lumo-textarea { resize: vertical; min-height: 64px; line-height: 1.5; }
+
+/* ── Hint ─────────────────────────────────────────────────────────────────── */
+.lumo-hint {
+    font-size: 11px;
+    color: #888;
+    margin: 2px 0 0;
+    line-height: 1.4;
+}
+
+/* ── Badge (e.g. "Ideal: 1200×630 px") ───────────────────────────────────── */
+.lumo-badge {
+    font-size: 10px;
+    font-weight: 400;
+    color: #666;
+    background: #f0f0f0;
+    border-radius: 3px;
+    padding: 1px 5px;
+    margin-left: 4px;
+    vertical-align: middle;
+}
+
+/* ── Character counter ────────────────────────────────────────────────────── */
+.lumo-counter {
+    font-size: 11px;
+    font-weight: 500;
+    color: #888;
+    white-space: nowrap;
+}
+
+/* ── Progress bar ─────────────────────────────────────────────────────────── */
+.lumo-progress-wrap {
+    height: 4px;
+    background: #e0e0e0;
+    border-radius: 2px;
+    margin-top: 5px;
+    overflow: hidden;
+}
+.lumo-progress {
+    height: 100%;
+    width: 0;
+    border-radius: 2px;
+    background: #2271b1;
+    transition: width .3s, background .3s;
+}
+
+/* ── Google snippet preview ───────────────────────────────────────────────── */
+.lumo-snippet-box {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    max-width: 560px;
+}
+.lumo-snippet-title {
+    font-size: 18px;
+    color: #1a0dab;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: default;
+}
+.lumo-snippet-url {
+    font-size: 12px;
+    color: #006621;
+    margin-bottom: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.lumo-snippet-desc {
+    font-size: 13px;
+    color: #545454;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ── Analyze row ──────────────────────────────────────────────────────────── */
+.lumo-analyze-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+}
+
+/* ── Buttons ──────────────────────────────────────────────────────────────── */
+.lumo-btn-primary {
+    background: #2271b1;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 7px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s;
+}
+.lumo-btn-primary:hover:not(:disabled) { background: #135e96; }
+.lumo-btn-primary:disabled { opacity: .6; cursor: default; }
+
+.lumo-btn-ghost {
+    background: transparent;
+    color: #555;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    padding: 7px 14px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: border-color .15s, color .15s;
+}
+.lumo-btn-ghost:hover { border-color: #888; color: #222; }
+
+.lumo-link-btn {
+    background: none;
+    border: none;
+    color: #2271b1;
+    font-size: 13px;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+}
+.lumo-link-btn:hover { color: #135e96; }
+
+/* ── Score header (donut + label) ─────────────────────────────────────────── */
+.lumo-score-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 14px;
+}
+.lumo-score-meta { display: flex; flex-direction: column; gap: 4px; }
+
+.lumo-btn-copy-report {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 4px;
+    background: #f6f7f7;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #2271b1;
+    cursor: pointer;
+    transition: background .15s, border-color .15s;
+    white-space: nowrap;
+}
+.lumo-btn-copy-report:hover { background: #f0f6fc; border-color: #2271b1; }
+
+.lumo-donut-wrap {
+    position: relative;
+    width: 72px;
+    height: 72px;
+    flex-shrink: 0;
+}
+.lumo-donut {
+    width: 72px;
+    height: 72px;
+    transform: rotate(-90deg);
+}
+.lumo-donut-bg   { fill: none; stroke: #e0e0e0; stroke-width: 3.5; }
+.lumo-donut-fill { fill: none; stroke: #46b450; stroke-width: 3.5; stroke-linecap: round; transition: stroke-dasharray .6s ease, stroke .4s; }
+
+.lumo-score-num {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 18px;
+    font-weight: 700;
+    color: #1e1e1e;
+}
+
+/* ── Fix summary tags ─────────────────────────────────────────────────────── */
+#lumo-fix-summary { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.lumo-fix-tag {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 12px;
+    white-space: nowrap;
+}
+.lumo-fix-meta    { background: #e8f5e9; color: #1b5e20; border: 1px solid #a5d6a7; }
+.lumo-fix-content { background: #fff8e1; color: #e65100; border: 1px solid #ffcc80; }
+
+/* ── Check list ───────────────────────────────────────────────────────────── */
+.lumo-check-section-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: #999;
+    margin: 12px 0 4px;
+}
+
+.lumo-check-group {
+    border: 1px solid #ebebeb;
+    border-radius: 5px;
+    margin-bottom: 6px;
+    overflow: hidden;
+}
+.lumo-check-group-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #333;
+    background: #f9f9f9;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+}
+.lumo-check-group-title::-webkit-details-marker { display: none; }
+.lumo-check-group-title::before {
+    content: '▶';
+    font-size: 9px;
+    color: #aaa;
+    transition: transform .15s;
+    flex-shrink: 0;
+}
+details[open] .lumo-check-group-title::before { transform: rotate(90deg); }
+.lumo-check-group-title span { color: #888; font-weight: 400; }
+
+.lumo-check-list { padding: 4px 8px 6px; }
+
+.lumo-check-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+    padding: 6px 2px;
+    border-bottom: 1px solid #f2f2f2;
+    line-height: 1.4;
+}
+.lumo-check-row:last-child { border-bottom: none; }
+
+.lumo-dot {
+    flex-shrink: 0;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    margin-top: 3px;
+}
+
+.lumo-check-msg { flex: 1; font-size: 12px; color: #444; }
+
+.lumo-prio-badge {
+    flex-shrink: 0;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-top: 1px;
+    align-self: flex-start;
+}
+
+/* ── OG / Twitter notice ──────────────────────────────────────────────────── */
+.lumo-og-notice {
+    background: #f0f6fc;
+    border-left: 3px solid #2271b1;
+    border-radius: 0 4px 4px 0;
+    padding: 8px 12px;
+    font-size: 12px;
+    color: #333;
+    margin-bottom: 14px;
+}
+
+/* ── Social card previews ─────────────────────────────────────────────────── */
+.lumo-og-preview-wrap {
+    margin-top: 16px;
+}
+
+/* Facebook-style OG card */
+.lumo-og-card {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    overflow: hidden;
+    max-width: 480px;
+    background: #fff;
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.lumo-og-card-img {
+    height: 180px;
+    background: #e4e6ea center/cover no-repeat;
+}
+.lumo-og-card-body { padding: 10px 14px 12px; }
+.lumo-og-card-domain {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: #8a8d91;
+    letter-spacing: .04em;
+    margin-bottom: 3px;
+}
+.lumo-og-card-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1c1e21;
+    margin-bottom: 3px;
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.lumo-og-card-desc {
+    font-size: 12px;
+    color: #606770;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Twitter card */
+.lumo-tw-card {
+    border: 1px solid #cfd9de;
+    border-radius: 12px;
+    overflow: hidden;
+    max-width: 480px;
+    background: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+.lumo-tw-card-img {
+    height: 180px;
+    background: #eff3f4 center/cover no-repeat;
+}
+.lumo-tw-card-body { padding: 10px 14px 12px; }
+.lumo-tw-card-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #0f1419;
+    margin-bottom: 3px;
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.lumo-tw-card-desc {
+    font-size: 12px;
+    color: #536471;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.lumo-tw-card-domain {
+    font-size: 11px;
+    color: #536471;
+    margin-top: 6px;
+}
+
+/* ── Media picker row ─────────────────────────────────────────────────────── */
+.lumo-media-row {
+    display: flex;
+    align-items: stretch;
+    gap: 6px;
+}
+.lumo-media-row .lumo-input { flex: 1; min-width: 0; }
+
+.lumo-btn-media {
+    flex-shrink: 0;
+    background: #f6f7f7;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    padding: 0 12px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #2271b1;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background .15s, border-color .15s;
+}
+.lumo-btn-media:hover { background: #f0f6fc; border-color: #2271b1; }
+
+.lumo-btn-media-remove {
+    flex-shrink: 0;
+    background: none;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    padding: 0 9px;
+    font-size: 13px;
+    color: #888;
+    cursor: pointer;
+    line-height: 1;
+    transition: color .15s, border-color .15s;
+}
+.lumo-btn-media-remove:hover { color: #dc3232; border-color: #dc3232; }
+
+/* ── Image preview thumbnail ──────────────────────────────────────────────── */
+.lumo-img-preview {
+    display: block;
+    max-width: 160px;
+    max-height: 90px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    margin-top: 6px;
+    object-fit: cover;
+}
+
+/* ── Checkbox label ───────────────────────────────────────────────────────── */
+.lumo-checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    cursor: pointer;
+    font-weight: 400 !important;
+}
+.lumo-checkbox-label input[type="checkbox"] { margin-top: 1px; flex-shrink: 0; }
+
+/* ── Flash highlight on imported fields ───────────────────────────────────── */
+@keyframes lumo-flash-anim {
+    0%, 100% { background-color: transparent; }
+    30%       { background-color: #d4f0d4; }
+}
+.lumo-flash { animation: lumo-flash-anim .9s ease; }
+
+/* ── Modal overlay ────────────────────────────────────────────────────────── */
+.lumo-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.55);
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Modal uses flex column so header+footer are sticky, body scrolls */
+.lumo-modal {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 8px 40px rgba(0,0,0,.25);
+    width: 100%;
+    max-width: 580px;
+    max-height: calc(100vh - 40px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* children handle their own scroll */
+    box-sizing: border-box;
+}
+
+/* ── Sticky header ── */
+.lumo-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 22px 14px;
+    border-bottom: 1px solid #ebebeb;
+    flex-shrink: 0;
+}
+.lumo-modal-header h3 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+    color: #1e1e1e;
+}
+.lumo-modal-close {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #888;
+    line-height: 1;
+    padding: 4px 6px;
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+.lumo-modal-close:hover { color: #333; background: #f0f0f0; }
+
+/* ── Scrollable body ── */
+.lumo-modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 22px;
+    overscroll-behavior: contain;
+}
+
+.lumo-modal-desc {
+    font-size: 13px;
+    color: #555;
+    margin: 0 0 10px;
+    line-height: 1.5;
+}
+
+.lumo-modal-hint {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+/* ── File drop zone ───────────────────────────────────────────────────────── */
+.lumo-file-drop {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 2px dashed #c3c4c7;
+    border-radius: 6px;
+    padding: 12px 16px;
+    cursor: pointer;
+    background: #fafafa;
+    transition: border-color .15s, background .15s;
+    margin-bottom: 6px;
+    user-select: none;
+}
+.lumo-file-drop:hover,
+.lumo-file-drop--over {
+    border-color: #2271b1;
+    background: #f0f6fc;
+}
+.lumo-file-input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+.lumo-file-icon { font-size: 18px; flex-shrink: 0; }
+.lumo-file-label { font-size: 13px; color: #555; flex: 1; }
+.lumo-file-name  { font-size: 12px; color: #27ae60; font-weight: 600; white-space: nowrap; }
+
+.lumo-import-or {
+    text-align: center;
+    position: relative;
+    margin: 10px 0 8px;
+    font-size: 11px;
+    color: #aaa;
+}
+.lumo-import-or::before,
+.lumo-import-or::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: calc(50% - 48px);
+    height: 1px;
+    background: #e0e0e0;
+}
+.lumo-import-or::before { left: 0; }
+.lumo-import-or::after  { right: 0; }
+.lumo-import-or span { background: #fff; padding: 0 8px; }
+
+.lumo-import-textarea {
+    width: 100%;
+    box-sizing: border-box;
+    height: 180px;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 12px;
+    line-height: 1.5;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    padding: 9px 10px;
+    resize: vertical;
+    color: #1e1e1e;
+    background: #fafafa;
+}
+.lumo-import-textarea:focus {
+    outline: none;
+    border-color: #2271b1;
+    box-shadow: 0 0 0 2px rgba(34,113,177,.15);
+    background: #fff;
+}
+
+/* ── Sticky footer ── */
+.lumo-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 12px 22px 16px;
+    border-top: 1px solid #ebebeb;
+    flex-shrink: 0;
+    background: #fff;
+}
+
+/* ── Import feedback ──────────────────────────────────────────────────────── */
+.lumo-import-feedback { margin-top: 10px; }
+
+.lumo-feedback-ok {
+    background: #eafaf1;
+    border: 1px solid #27ae60;
+    border-radius: 5px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: #1e6b3a;
+}
+.lumo-feedback-ok ul { margin: 6px 0 0 16px; padding: 0; }
+.lumo-feedback-ok li { margin-bottom: 3px; }
+
+.lumo-feedback-error {
+    background: #fdecea;
+    border: 1px solid #c0392b;
+    border-radius: 5px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: #7b241c;
+}
+
+/* ── Advisory sections ────────────────────────────────────────────────────── */
+.lumo-advisory {
+    margin-top: 10px;
+    padding: 10px 14px;
+    border-radius: 5px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+.lumo-advisory--headings {
+    background: #fff8e1;
+    border: 1px solid #f1c40f;
+    color: #5d4037;
+}
+.lumo-advisory--notes {
+    background: #f0f4ff;
+    border: 1px solid #7986cb;
+    color: #283593;
+}
+.lumo-advisory--kw {
+    background: #e8f5e9;
+    border: 1px solid #66bb6a;
+    color: #1b5e20;
+}
+.lumo-advisory ul { margin: 4px 0 0 16px; padding: 0; }
+.lumo-advisory li { margin-bottom: 3px; }
+/* Cap long advisory notes so they don't push buttons off screen */
+.lumo-advisory--notes { max-height: 120px; overflow-y: auto; }
+.lumo-advisory--headings ul { max-height: 100px; overflow-y: auto; }

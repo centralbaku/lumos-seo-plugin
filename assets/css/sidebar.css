@@ -1,0 +1,61 @@
+/* Lumo SEO — Gutenberg sidebar styles */
+
+/* ── Sidebar wrapper ──────────────────── */
+.lumo-sidebar {
+    font-size: 13px;
+}
+
+/* ── Panel overrides ──────────────────── */
+.lumo-sidebar .components-panel__body {
+    border-top: 1px solid #e0e0e0;
+}
+.lumo-sidebar .components-panel__body-title button {
+    font-weight: 600;
+    font-size: 13px;
+    padding: 12px 16px;
+}
+.lumo-sidebar .components-panel__body-toggle-icon {
+    margin-left: auto;
+}
+
+/* ── Check rows ───────────────────────── */
+.lumo-check-group .components-panel__body-title button {
+    font-size: 12px;
+    font-weight: 500;
+    color: #555;
+    padding: 8px 16px;
+}
+.lumo-check-group > .components-panel__body-contents {
+    padding: 0 16px 8px;
+}
+
+.lumo-check-row:last-child {
+    border-bottom: none !important;
+}
+
+/* ── Snippet preview ──────────────────── */
+.lumo-snippet {
+    font-family: Arial, sans-serif;
+}
+
+/* ── Score badge animation ────────────── */
+@keyframes lumo-pop {
+    0%   { transform: scale(.8); opacity: 0; }
+    100% { transform: scale(1);  opacity: 1; }
+}
+.lumo-sidebar span[style*="border-radius: 10px"] {
+    animation: lumo-pop .25s ease;
+}
+
+/* ── Spinner fix ──────────────────────── */
+.lumo-sidebar .components-spinner {
+    margin: 0;
+}
+
+/* ── Analyze button ───────────────────── */
+.lumo-sidebar .components-button.is-secondary {
+    justify-content: center;
+}
+
+/* ── CharBar ──────────────────────────── */
+.lumo-char-bar { margin-top: 4px; }
