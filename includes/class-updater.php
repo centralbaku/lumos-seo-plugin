@@ -143,6 +143,14 @@ class Lumos_SEO_Updater {
 
         $remote = $payload->version;
 
+        // Always clear stale entries first; WP may keep previous response values.
+        if ( isset( $transient->response[ $this->plugin_slug ] ) ) {
+            unset( $transient->response[ $this->plugin_slug ] );
+        }
+        if ( isset( $transient->no_update[ $this->plugin_slug ] ) ) {
+            unset( $transient->no_update[ $this->plugin_slug ] );
+        }
+
         if ( version_compare( $this->version, $remote, '<' ) ) {
             $transient->response[ $this->plugin_slug ] = (object) array(
                 'id'           => 'github.com/' . $this->repo,
@@ -229,6 +237,7 @@ class Lumos_SEO_Updater {
             && isset( $hook_extra['plugins'] ) && in_array( $this->plugin_slug, (array) $hook_extra['plugins'], true )
         ) {
             delete_transient( $this->cache_key );
+            delete_site_transient( 'update_plugins' );
         }
     }
 

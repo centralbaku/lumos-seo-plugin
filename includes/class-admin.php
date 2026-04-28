@@ -21,7 +21,7 @@ class Lumos_SEO_Admin {
             'manage_options',
             'lumos-seo-dashboard',
             [ $this, 'dashboard_page' ],
-            LUMOS_SEO_URL . 'assets/icon.svg',
+            LUMOS_SEO_URL . 'assets/icon-menu-20x20.png',
             80
         );
 

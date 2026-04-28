@@ -6,6 +6,15 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.10.5] — 2026-04-28
+
+### Fixed
+- **Persistent false update notice after plugin upgrade** — updater now clears stale plugin entries from both `response` and `no_update` buckets before injecting fresh update state, preventing old "update available" rows from lingering.
+- **Update transient refresh after successful upgrade** — `update_plugins` site transient is now cleared when plugin update completes so WordPress rebuilds update state on next load.
+- **Admin menu icon rendering** — replaced oversized SVG menu icon usage with dedicated `icon-menu-20x20.png` to avoid sidebar icon stretching/background overflow.
+
+---
+
 ## [1.10.4] — 2026-04-28
 
 ### Changed
