@@ -6,6 +6,13 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.10.1] — 2026-04-28
+
+### Fixed
+- **Mismatched SEO scores between Classic and Gutenberg editors** — Gutenberg sidebar still referenced legacy `_lumo_*` meta keys while the plugin now stores `_lumos_*` keys. Updated all sidebar read/write/import mappings to `_lumos_*` so both editors analyze the same values and display consistent scores.
+
+---
+
 ## [1.10.0] — 2026-04-28
 
 ### Added

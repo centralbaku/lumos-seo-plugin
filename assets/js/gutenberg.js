@@ -163,22 +163,22 @@
 
     // ── AI Import Modal ───────────────────────────────────────────────────
     const IMPORT_FIELDS = {
-        focus_keyword:       '_lumo_focus_keyword',
-        meta_title:          '_lumo_meta_title',
-        meta_description:    '_lumo_meta_description',
-        og_title:            '_lumo_og_title',
-        og_description:      '_lumo_og_description',
-        og_image:            '_lumo_og_image',
-        og_url:              '_lumo_og_url',
-        og_type:             '_lumo_og_type',
-        og_site_name:        '_lumo_og_site_name',
-        og_locale:           '_lumo_og_locale',
-        twitter_card:        '_lumo_twitter_card',
-        twitter_title:       '_lumo_twitter_title',
-        twitter_description: '_lumo_twitter_description',
-        twitter_image:       '_lumo_twitter_image',
-        canonical:           '_lumo_canonical',
-        noindex:             '_lumo_noindex',
+        focus_keyword:       '_lumos_focus_keyword',
+        meta_title:          '_lumos_meta_title',
+        meta_description:    '_lumos_meta_description',
+        og_title:            '_lumos_og_title',
+        og_description:      '_lumos_og_description',
+        og_image:            '_lumos_og_image',
+        og_url:              '_lumos_og_url',
+        og_type:             '_lumos_og_type',
+        og_site_name:        '_lumos_og_site_name',
+        og_locale:           '_lumos_og_locale',
+        twitter_card:        '_lumos_twitter_card',
+        twitter_title:       '_lumos_twitter_title',
+        twitter_description: '_lumos_twitter_description',
+        twitter_image:       '_lumos_twitter_image',
+        canonical:           '_lumos_canonical',
+        noindex:             '_lumos_noindex',
     };
 
     function parseImportJson( raw ) {
@@ -351,24 +351,24 @@
         const [ error,       setError       ] = useState( null );
         const [ showImport,  setShowImport  ] = useState( false );
 
-        const focusKw   = meta._lumo_focus_keyword       || '';
-        const metaTitle = meta._lumo_meta_title          || '';
-        const metaDesc  = meta._lumo_meta_description    || '';
+        const focusKw   = meta._lumos_focus_keyword       || '';
+        const metaTitle = meta._lumos_meta_title          || '';
+        const metaDesc  = meta._lumos_meta_description    || '';
         // OG
-        const ogTitle   = meta._lumo_og_title            || '';
-        const ogDesc    = meta._lumo_og_description      || '';
-        const ogImage   = meta._lumo_og_image            || '';
-        const ogUrl     = meta._lumo_og_url              || '';
-        const ogType    = meta._lumo_og_type             || '';
-        const ogSite    = meta._lumo_og_site_name        || '';
-        const ogLocale  = meta._lumo_og_locale           || '';
+        const ogTitle   = meta._lumos_og_title            || '';
+        const ogDesc    = meta._lumos_og_description      || '';
+        const ogImage   = meta._lumos_og_image            || '';
+        const ogUrl     = meta._lumos_og_url              || '';
+        const ogType    = meta._lumos_og_type             || '';
+        const ogSite    = meta._lumos_og_site_name        || '';
+        const ogLocale  = meta._lumos_og_locale           || '';
         // Twitter
-        const twCard    = meta._lumo_twitter_card        || '';
-        const twTitle   = meta._lumo_twitter_title       || '';
-        const twDesc    = meta._lumo_twitter_description || '';
-        const twImage   = meta._lumo_twitter_image       || '';
+        const twCard    = meta._lumos_twitter_card        || '';
+        const twTitle   = meta._lumos_twitter_title       || '';
+        const twDesc    = meta._lumos_twitter_description || '';
+        const twImage   = meta._lumos_twitter_image       || '';
         // Advanced
-        const noindex   = meta._lumo_noindex             || '';
+        const noindex   = meta._lumos_noindex             || '';
 
         const setMeta = useCallback( ( key, val ) => {
             editPost( { meta: { [ key ]: val } } );
@@ -465,7 +465,7 @@
                     label:       '',
                     value:       focusKw,
                     placeholder: 'e.g. best running shoes',
-                    onChange:    v => setMeta( '_lumo_focus_keyword', v ),
+                    onChange:    v => setMeta( '_lumos_focus_keyword', v ),
                     __nextHasNoMarginBottom: true,
                 } ),
                 el( 'div', { style: { marginTop: 8 } },
@@ -521,7 +521,7 @@
                     label:    'SEO Title',
                     value:    metaTitle,
                     placeholder: postTitle,
-                    onChange: v => setMeta( '_lumo_meta_title', v ),
+                    onChange: v => setMeta( '_lumos_meta_title', v ),
                     help:     ( ( metaTitle || postTitle ).length ) + ' / 60 chars',
                     __nextHasNoMarginBottom: true,
                 } ),
@@ -532,7 +532,7 @@
                 el( TextareaControl, {
                     label:    'Meta Description',
                     value:    metaDesc,
-                    onChange: v => setMeta( '_lumo_meta_description', v ),
+                    onChange: v => setMeta( '_lumos_meta_description', v ),
                     help:     metaDesc.length + ' / 158 chars',
                     rows:     3,
                     __nextHasNoMarginBottom: true,
@@ -546,29 +546,29 @@
                     'Controls how your page appears when shared on social platforms.'
                 ),
                 el( TextControl, { label: 'og:title', value: ogTitle, placeholder: previewTitle || 'Defaults to SEO title',
-                    onChange: v => setMeta( '_lumo_og_title', v ), __nextHasNoMarginBottom: true } ),
+                    onChange: v => setMeta( '_lumos_og_title', v ), __nextHasNoMarginBottom: true } ),
                 el( 'div', { style: { height: 10 } } ),
                 el( TextareaControl, { label: 'og:description', value: ogDesc, placeholder: 'Defaults to meta description',
-                    onChange: v => setMeta( '_lumo_og_description', v ), rows: 3, __nextHasNoMarginBottom: true } ),
+                    onChange: v => setMeta( '_lumos_og_description', v ), rows: 3, __nextHasNoMarginBottom: true } ),
                 el( 'div', { style: { height: 10 } } ),
                 el( TextControl, { label: 'og:image (URL)', value: ogImage,
                     placeholder: 'https://yoursite.com/image.jpg — ideal 1200×630px',
-                    onChange: v => setMeta( '_lumo_og_image', v ), __nextHasNoMarginBottom: true } ),
+                    onChange: v => setMeta( '_lumos_og_image', v ), __nextHasNoMarginBottom: true } ),
                 ogImage && el( 'img', { src: ogImage, alt: '', style: { width: '100%', marginTop: 8, borderRadius: 4, border: '1px solid #ddd' } } ),
                 el( 'div', { style: { height: 10 } } ),
                 el( TextControl, { label: 'og:url', value: ogUrl, placeholder: previewUrl || 'Defaults to page URL',
-                    onChange: v => setMeta( '_lumo_og_url', v ), __nextHasNoMarginBottom: true } ),
+                    onChange: v => setMeta( '_lumos_og_url', v ), __nextHasNoMarginBottom: true } ),
                 el( 'div', { style: { height: 10 } } ),
                 el( 'div', { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 } },
                     el( TextControl, { label: 'og:type', value: ogType, placeholder: 'article',
-                        onChange: v => setMeta( '_lumo_og_type', v ), __nextHasNoMarginBottom: true } ),
+                        onChange: v => setMeta( '_lumos_og_type', v ), __nextHasNoMarginBottom: true } ),
                     el( TextControl, { label: 'og:locale', value: ogLocale, placeholder: 'en_US',
-                        onChange: v => setMeta( '_lumo_og_locale', v ), __nextHasNoMarginBottom: true } )
+                        onChange: v => setMeta( '_lumos_og_locale', v ), __nextHasNoMarginBottom: true } )
                 ),
                 el( 'div', { style: { height: 10 } } ),
                 el( TextControl, { label: 'og:site_name', value: ogSite,
                     placeholder: lumosSEO.siteName || 'Your Brand',
-                    onChange: v => setMeta( '_lumo_og_site_name', v ), __nextHasNoMarginBottom: true } )
+                    onChange: v => setMeta( '_lumos_og_site_name', v ), __nextHasNoMarginBottom: true } )
             ),
 
             // ── Twitter / X ───────────────────────────────────────────────
@@ -580,7 +580,7 @@
                     el( 'label', { style: { fontSize: 11, fontWeight: 600, color: '#444', display: 'block', marginBottom: 4 } }, 'twitter:card' ),
                     el( 'select', {
                         value: twCard || 'summary_large_image',
-                        onChange: e => setMeta( '_lumo_twitter_card', e.target.value ),
+                        onChange: e => setMeta( '_lumos_twitter_card', e.target.value ),
                         style: { width: '100%', padding: '6px 8px', border: '1px solid #ddd', borderRadius: 4, fontSize: 13 },
                     },
                         el( 'option', { value: 'summary_large_image' }, 'summary_large_image (large image)' ),
@@ -590,27 +590,27 @@
                     )
                 ),
                 el( TextControl, { label: 'twitter:title', value: twTitle, placeholder: ogTitle || 'Falls back to og:title',
-                    onChange: v => setMeta( '_lumo_twitter_title', v ), __nextHasNoMarginBottom: true } ),
+                    onChange: v => setMeta( '_lumos_twitter_title', v ), __nextHasNoMarginBottom: true } ),
                 el( 'div', { style: { height: 10 } } ),
                 el( TextareaControl, { label: 'twitter:description', value: twDesc, placeholder: 'Falls back to og:description',
-                    onChange: v => setMeta( '_lumo_twitter_description', v ), rows: 2, __nextHasNoMarginBottom: true } ),
+                    onChange: v => setMeta( '_lumos_twitter_description', v ), rows: 2, __nextHasNoMarginBottom: true } ),
                 el( 'div', { style: { height: 10 } } ),
                 el( TextControl, { label: 'twitter:image (URL)', value: twImage, placeholder: 'Falls back to og:image',
-                    onChange: v => setMeta( '_lumo_twitter_image', v ), __nextHasNoMarginBottom: true } ),
+                    onChange: v => setMeta( '_lumos_twitter_image', v ), __nextHasNoMarginBottom: true } ),
                 twImage && el( 'img', { src: twImage, alt: '', style: { width: '100%', marginTop: 8, borderRadius: 4, border: '1px solid #ddd' } } )
             ),
 
             // ── Advanced ──────────────────────────────────────────────────
             el( PanelBody, { title: 'Advanced', initialOpen: false, className: 'lumos-panel' },
-                el( TextControl, { label: 'Canonical URL', value: meta._lumo_canonical || '', placeholder: previewUrl || 'Defaults to page URL',
-                    onChange: v => setMeta( '_lumo_canonical', v ), __nextHasNoMarginBottom: true,
+                el( TextControl, { label: 'Canonical URL', value: meta._lumos_canonical || '', placeholder: previewUrl || 'Defaults to page URL',
+                    onChange: v => setMeta( '_lumos_canonical', v ), __nextHasNoMarginBottom: true,
                     help: 'Leave blank to use the page URL.' } ),
                 el( 'div', { style: { height: 10 } } ),
                 el( 'label', { style: { display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', fontSize: 13 } },
                     el( 'input', {
                         type:     'checkbox',
                         checked:  noindex === '1',
-                        onChange: e => setMeta( '_lumo_noindex', e.target.checked ? '1' : '' ),
+                        onChange: e => setMeta( '_lumos_noindex', e.target.checked ? '1' : '' ),
                     } ),
                     'No index, No follow'
                 ),
