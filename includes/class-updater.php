@@ -3,15 +3,15 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 class Lumos_SEO_Updater {
 
-    private string $plugin_file;
-    private string $plugin_slug;   // folder/file.php
-    private string $plugin_folder; // folder only
-    private string $version;
-    private string $repo = 'centralbaku/lumos-seo-plugin';
-    private string $cache_key = 'lumos_seo_update_info';
-    private int    $cache_ttl;
+    private $plugin_file;
+    private $plugin_slug;   // folder/file.php
+    private $plugin_folder; // folder only
+    private $version;
+    private $repo = 'centralbaku/lumos-seo-plugin';
+    private $cache_key = 'lumos_seo_update_info';
+    private $cache_ttl;
 
-    public function __construct( string $plugin_file, string $version ) {
+    public function __construct( $plugin_file, $version ) {
         $this->plugin_file   = $plugin_file;
         $this->plugin_slug   = plugin_basename( $plugin_file );
         $this->plugin_folder = dirname( $this->plugin_slug );
@@ -110,7 +110,7 @@ class Lumos_SEO_Updater {
     }
 
     // ── Plugin info popup ─────────────────────────────────────────────────────
-    public function plugin_info( mixed $result, string $action, object $args ): mixed {
+    public function plugin_info( $result, string $action, object $args ) {
         if ( $action !== 'plugin_information' ) return $result;
         if ( ( $args->slug ?? '' ) !== $this->plugin_folder ) return $result;
 
@@ -159,7 +159,7 @@ class Lumos_SEO_Updater {
     }
 
     // ── Clear cache after successful update ───────────────────────────────────
-    public function clear_cache( object $upgrader, array $hook_extra ): void {
+    public function clear_cache( object $upgrader, array $hook_extra ) {
         if ( ( $hook_extra['action'] ?? '' ) === 'update'
             && ( $hook_extra['type'] ?? '' ) === 'plugin'
             && in_array( $this->plugin_slug, (array) ( $hook_extra['plugins'] ?? [] ), true )

@@ -44,7 +44,7 @@ class Lumos_SEO_Meta_Box {
                 'show_in_rest'  => true,
                 'single'        => true,
                 'type'          => 'string',
-                'auth_callback' => fn() => current_user_can( 'edit_posts' ),
+                'auth_callback' => function() { return current_user_can( 'edit_posts' ); },
             ] );
         }
     }
