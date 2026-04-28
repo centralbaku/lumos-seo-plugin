@@ -6,6 +6,18 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.10.0] — 2026-04-28
+
+### Added
+- **Admin SEO Dashboard** — new `Lumos SEO → Dashboard` page with tabbed modules for: SEO Performance Overview, Keyword Research & Strategy, Keyword Ranking Tracker, SERP Analysis & Competitive Intelligence, Website Sitemap & Optimization Tracker, and Implementation Checklist.
+- **Editable planning data** — users can add, edit, and delete keyword rows, ranking rows, SERP rows, sitemap tracking rows, and checklist tasks directly in the dashboard.
+- **Tag-based ranking filter** — ranking tracker now supports writing/selecting tags and filtering rows by tag for focused monitoring.
+
+### Changed
+- **Menu structure updated** — Dashboard is now the main Lumos SEO page and plugin configuration moved to `Lumos SEO → Settings`.
+
+---
+
 ## [1.9.3] — 2026-04-28
 
 ### Changed

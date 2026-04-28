@@ -1,0 +1,115 @@
+.lumos-dashboard-wrap {
+    max-width: 1320px;
+}
+
+.lumos-dash-tabs {
+    display: flex;
+    gap: 8px;
+    border-bottom: 1px solid #dcdcde;
+    margin: 16px 0;
+    overflow-x: auto;
+}
+
+.lumos-dash-tab {
+    border: 0;
+    border-bottom: 2px solid transparent;
+    background: transparent;
+    padding: 10px 12px;
+    cursor: pointer;
+    font-weight: 600;
+    color: #50575e;
+    white-space: nowrap;
+}
+
+.lumos-dash-tab.active {
+    color: #2271b1;
+    border-bottom-color: #2271b1;
+}
+
+.lumos-dash-panel {
+    display: none;
+}
+
+.lumos-dash-panel.active {
+    display: block;
+}
+
+.lumos-overview-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.lumos-card {
+    background: #fff;
+    border: 1px solid #dcdcde;
+    border-left: 3px solid #2271b1;
+    border-radius: 6px;
+    padding: 14px;
+}
+
+.lumos-card .label {
+    color: #646970;
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+
+.lumos-card .value {
+    font-size: 26px;
+    line-height: 1.2;
+    font-weight: 700;
+    color: #1d2327;
+}
+
+.lumos-chart-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 12px;
+}
+
+.lumos-chart-card {
+    background: #fff;
+    border: 1px solid #dcdcde;
+    border-radius: 6px;
+    padding: 12px;
+    min-height: 280px;
+}
+
+.lumos-actions-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.lumos-actions-row input[type="search"] {
+    min-width: 220px;
+}
+
+.lumos-table-wrap {
+    background: #fff;
+    border: 1px solid #dcdcde;
+    border-radius: 6px;
+    overflow: auto;
+}
+
+.lumos-table-wrap table input[type="text"],
+.lumos-table-wrap table input[type="number"],
+.lumos-table-wrap table input[type="url"],
+.lumos-table-wrap table select {
+    width: 100%;
+}
+
+.lumos-small-btn {
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    background: #f6f7f7;
+    cursor: pointer;
+    padding: 3px 8px;
+}
+
+.lumos-small-btn:hover {
+    background: #fff;
+}
