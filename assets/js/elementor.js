@@ -1,28 +1,28 @@
-/* Lumo SEO — Elementor Editor Panel */
+/* Lumos SEO — Elementor Editor Panel */
 (function ($) {
     'use strict';
 
     var DEBOUNCE_MS = 900;
     var state = {
-        focusKw:   lumoSEO.meta.focus_keyword          || '',
-        metaTitle: lumoSEO.meta.meta_title              || '',
-        metaDesc:  lumoSEO.meta.meta_description        || '',
+        focusKw:   lumosSEO.meta.focus_keyword          || '',
+        metaTitle: lumosSEO.meta.meta_title              || '',
+        metaDesc:  lumosSEO.meta.meta_description        || '',
         // OG
-        ogTitle:   lumoSEO.meta.og_title                || '',
-        ogDesc:    lumoSEO.meta.og_description          || '',
-        ogImage:   lumoSEO.meta.og_image                || '',
-        ogUrl:     lumoSEO.meta.og_url                  || '',
-        ogType:    lumoSEO.meta.og_type                 || '',
-        ogSite:    lumoSEO.meta.og_site_name            || '',
-        ogLocale:  lumoSEO.meta.og_locale               || '',
+        ogTitle:   lumosSEO.meta.og_title                || '',
+        ogDesc:    lumosSEO.meta.og_description          || '',
+        ogImage:   lumosSEO.meta.og_image                || '',
+        ogUrl:     lumosSEO.meta.og_url                  || '',
+        ogType:    lumosSEO.meta.og_type                 || '',
+        ogSite:    lumosSEO.meta.og_site_name            || '',
+        ogLocale:  lumosSEO.meta.og_locale               || '',
         // Twitter
-        twCard:    lumoSEO.meta.twitter_card            || '',
-        twTitle:   lumoSEO.meta.twitter_title           || '',
-        twDesc:    lumoSEO.meta.twitter_description     || '',
-        twImage:   lumoSEO.meta.twitter_image           || '',
+        twCard:    lumosSEO.meta.twitter_card            || '',
+        twTitle:   lumosSEO.meta.twitter_title           || '',
+        twDesc:    lumosSEO.meta.twitter_description     || '',
+        twImage:   lumosSEO.meta.twitter_image           || '',
         // Advanced
-        noindex:   lumoSEO.meta.noindex                 || '',
-        canonical: lumoSEO.meta.canonical               || '',
+        noindex:   lumosSEO.meta.noindex                 || '',
+        canonical: lumosSEO.meta.canonical               || '',
         analysis:  null,
         loading:   false,
         open:      false,
@@ -70,10 +70,10 @@
 
     // Save a single meta field via AJAX (no-op on error — non-critical)
     function saveMeta(key, value) {
-        $.post(lumoSEO.ajaxurl, {
-            action:   'lumo_seo_save_meta',
-            nonce:    lumoSEO.nonce,
-            post_id:  lumoSEO.post_id,
+        $.post(lumosSEO.ajaxurl, {
+            action:   'lumos_seo_save_meta',
+            nonce:    lumosSEO.nonce,
+            post_id:  lumosSEO.post_id,
             meta_key: key,
             meta_val: value,
         });
@@ -85,10 +85,10 @@
         state.loading = true;
         renderPanel();
 
-        $.post(lumoSEO.ajaxurl, {
-            action:           'lumo_seo_analyze',
-            nonce:            lumoSEO.nonce,
-            post_id:          lumoSEO.post_id,
+        $.post(lumosSEO.ajaxurl, {
+            action:           'lumos_seo_analyze',
+            nonce:            lumosSEO.nonce,
+            post_id:          lumosSEO.post_id,
             focus_keyword:    state.focusKw,
             meta_title:       state.metaTitle,
             meta_description: state.metaDesc,
@@ -145,7 +145,7 @@
     function priorityBadge(priority) {
         var cfg = PRIORITY_LABELS[priority] || PRIORITY_LABELS.low;
         return el('span', {
-            className: 'lumo-priority-badge',
+            className: 'lumos-priority-badge',
             style: {
                 fontSize: '9px', fontWeight: '700', padding: '1px 5px',
                 borderRadius: '3px', color: cfg.color, background: cfg.bg,
@@ -155,7 +155,7 @@
     }
 
     function checkRow(check) {
-        var row = el('div', { className: 'lumo-check-row', style: { display: 'flex', gap: '8px', padding: '7px 0', borderBottom: '1px solid #f0f0f0', alignItems: 'flex-start' } }, [
+        var row = el('div', { className: 'lumos-check-row', style: { display: 'flex', gap: '8px', padding: '7px 0', borderBottom: '1px solid #f0f0f0', alignItems: 'flex-start' } }, [
             dot(check.status),
             el('span', { style: { flex: '1', fontSize: '12px', lineHeight: '1.5', color: '#333' }, html: check.message }),
             priorityBadge(check.priority),
@@ -166,26 +166,26 @@
     function checkGroup(title, checks, defaultOpen) {
         if (!checks.length) return null;
         var isOpen = defaultOpen;
-        var content = el('div', { className: 'lumo-group-content', style: { display: isOpen ? 'block' : 'none', padding: '0 0 4px' } },
+        var content = el('div', { className: 'lumos-group-content', style: { display: isOpen ? 'block' : 'none', padding: '0 0 4px' } },
             checks.map(function (c) { return checkRow(c); })
         );
         var toggle = el('button', {
-            className: 'lumo-group-toggle',
+            className: 'lumos-group-toggle',
             style: {
                 width: '100%', textAlign: 'left', background: 'none', border: 'none',
                 padding: '8px 0', cursor: 'pointer', fontSize: '12px', fontWeight: '600',
                 color: '#444', display: 'flex', alignItems: 'center', gap: '6px',
             },
         }, [
-            el('span', { className: 'lumo-toggle-arrow', style: { transition: 'transform .2s', display: 'inline-block', transform: isOpen ? 'rotate(90deg)' : 'rotate(0deg)' } }, '▶'),
+            el('span', { className: 'lumos-toggle-arrow', style: { transition: 'transform .2s', display: 'inline-block', transform: isOpen ? 'rotate(90deg)' : 'rotate(0deg)' } }, '▶'),
             title + ' (' + checks.length + ')',
         ]);
         toggle.addEventListener('click', function () {
             isOpen = !isOpen;
             content.style.display = isOpen ? 'block' : 'none';
-            toggle.querySelector('.lumo-toggle-arrow').style.transform = isOpen ? 'rotate(90deg)' : 'rotate(0deg)';
+            toggle.querySelector('.lumos-toggle-arrow').style.transform = isOpen ? 'rotate(90deg)' : 'rotate(0deg)';
         });
-        var wrap = el('div', { className: 'lumo-check-group' }, [toggle, content]);
+        var wrap = el('div', { className: 'lumos-check-group' }, [toggle, content]);
         return wrap;
     }
 
@@ -210,10 +210,10 @@
     function buildSnippet() {
         var title   = state.metaTitle || document.title || '(no title)';
         var desc    = state.metaDesc  || 'No meta description set.';
-        var preview = el('div', { className: 'lumo-snippet-preview' }, [
-            el('div', { className: 'lumo-snippet-title', html: escHtml(title) }),
-            el('div', { className: 'lumo-snippet-url' }, lumoSEO.siteUrl + '/'),
-            el('div', { className: 'lumo-snippet-desc', html: escHtml(desc) }),
+        var preview = el('div', { className: 'lumos-snippet-preview' }, [
+            el('div', { className: 'lumos-snippet-title', html: escHtml(title) }),
+            el('div', { className: 'lumos-snippet-url' }, lumosSEO.siteUrl + '/'),
+            el('div', { className: 'lumos-snippet-desc', html: escHtml(desc) }),
         ]);
         return preview;
     }
@@ -225,12 +225,12 @@
     // ── Labeled field ────────────────────────────────────────────────────
     function labeledInput(label, value, placeholder, onChange, maxChars) {
         var input = el('input', {
-            className: 'lumo-field',
+            className: 'lumos-field',
             style: { width: '100%', boxSizing: 'border-box', padding: '6px 8px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '12px' },
             value: value,
             placeholder: placeholder || '',
         });
-        var counter = el('span', { className: 'lumo-counter', style: { fontSize: '10px', color: '#999', float: 'right' } }, value.length + (maxChars ? '/' + maxChars : ''));
+        var counter = el('span', { className: 'lumos-counter', style: { fontSize: '10px', color: '#999', float: 'right' } }, value.length + (maxChars ? '/' + maxChars : ''));
         var bar = maxChars ? buildBar(value.length, maxChars) : null;
 
         input.addEventListener('input', function () {
@@ -253,7 +253,7 @@
 
     function labeledTextarea(label, value, placeholder, onChange, maxChars) {
         var ta = el('textarea', {
-            className: 'lumo-field',
+            className: 'lumos-field',
             style: { width: '100%', boxSizing: 'border-box', padding: '6px 8px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '12px', resize: 'vertical', minHeight: '60px' },
             placeholder: placeholder || '',
         });
@@ -310,10 +310,10 @@
     function buildTabs() {
         var tabs = ['seo', 'readability', 'snippet', 'social', 'advanced'];
         var labels = { seo: 'SEO', readability: 'Readability', snippet: 'Preview', social: 'Social', advanced: 'Advanced' };
-        var tabBar = el('div', { className: 'lumo-tab-bar' });
+        var tabBar = el('div', { className: 'lumos-tab-bar' });
         tabs.forEach(function (t) {
             var btn = el('button', {
-                className: 'lumo-tab' + (state.activeTab === t ? ' active' : ''),
+                className: 'lumos-tab' + (state.activeTab === t ? ' active' : ''),
                 on: { click: function () {
                     state.activeTab = t;
                     renderPanelBody();
@@ -326,7 +326,7 @@
 
     // ── Panel body ────────────────────────────────────────────────────────
     function buildPanelBody() {
-        var body = el('div', { className: 'lumo-panel-body' });
+        var body = el('div', { className: 'lumos-panel-body' });
 
         if (state.activeTab === 'seo') {
             body.appendChild(buildSEOTab());
@@ -412,7 +412,7 @@
         wrap.appendChild(kwWrap);
 
         var analyzeBtn = el('button', {
-            className: 'lumo-btn-primary',
+            className: 'lumos-btn-primary',
             style: { width: '100%', marginBottom: '14px' },
             on: { click: runAnalysis },
         }, state.loading ? 'Analyzing…' : 'Analyze now');
@@ -491,7 +491,7 @@
         }));
         wrap.appendChild(row);
 
-        wrap.appendChild(labeledInput('og:site_name', state.ogSite, lumoSEO.siteName || 'Your Brand', function (v) {
+        wrap.appendChild(labeledInput('og:site_name', state.ogSite, lumosSEO.siteName || 'Your Brand', function (v) {
             state.ogSite = v; saveMeta('_lumo_og_site_name', v);
         }));
 
@@ -565,44 +565,44 @@
 
     function renderPanel() {
         if (!panelEl) return;
-        var body = panelEl.querySelector('.lumo-panel-body');
+        var body = panelEl.querySelector('.lumos-panel-body');
         if (body) body.parentNode.removeChild(body);
-        var tabBar = panelEl.querySelector('.lumo-tab-bar');
+        var tabBar = panelEl.querySelector('.lumos-tab-bar');
         if (tabBar) tabBar.parentNode.removeChild(tabBar);
 
-        panelEl.querySelector('.lumo-panel-inner').appendChild(buildTabs());
-        panelEl.querySelector('.lumo-panel-inner').appendChild(buildPanelBody());
+        panelEl.querySelector('.lumos-panel-inner').appendChild(buildTabs());
+        panelEl.querySelector('.lumos-panel-inner').appendChild(buildPanelBody());
     }
 
     function renderPanelBody() {
         if (!panelEl) return;
-        var body = panelEl.querySelector('.lumo-panel-body');
+        var body = panelEl.querySelector('.lumos-panel-body');
         if (body) body.parentNode.removeChild(body);
-        panelEl.querySelector('.lumo-panel-inner').appendChild(buildPanelBody());
+        panelEl.querySelector('.lumos-panel-inner').appendChild(buildPanelBody());
 
         // Re-mark active tab
-        panelEl.querySelectorAll('.lumo-tab').forEach(function (btn) {
+        panelEl.querySelectorAll('.lumos-tab').forEach(function (btn) {
             btn.classList.toggle('active', btn.textContent.toLowerCase().indexOf(state.activeTab.slice(0,3)) !== -1 || btn.dataset.tab === state.activeTab);
         });
     }
 
     // ── Panel creation ────────────────────────────────────────────────────
     function createPanel() {
-        panelEl = el('div', { id: 'lumo-seo-panel', className: 'lumo-seo-panel' + (state.open ? ' open' : '') });
+        panelEl = el('div', { id: 'lumos-seo-panel', className: 'lumos-seo-panel' + (state.open ? ' open' : '') });
 
         // Header
-        var header = el('div', { className: 'lumo-panel-header' }, [
-            el('div', { className: 'lumo-panel-logo' }, [
+        var header = el('div', { className: 'lumos-panel-header' }, [
+            el('div', { className: 'lumos-panel-logo' }, [
                 el('span', { style: { fontSize: '16px' } }, '🔍'),
-                el('span', { style: { fontWeight: '700', fontSize: '14px' } }, 'Lumo SEO'),
+                el('span', { style: { fontWeight: '700', fontSize: '14px' } }, 'Lumos SEO'),
             ]),
             el('button', {
-                className: 'lumo-panel-close',
+                className: 'lumos-panel-close',
                 on: { click: function () { state.open = false; panelEl.classList.remove('open'); } },
             }, '✕'),
         ]);
 
-        var inner = el('div', { className: 'lumo-panel-inner' });
+        var inner = el('div', { className: 'lumos-panel-inner' });
         inner.appendChild(buildTabs());
         inner.appendChild(buildPanelBody());
 
@@ -671,7 +671,7 @@
     }
 
     function buildImportModal() {
-        var overlay = el('div', { id: 'lumo-import-overlay', style: {
+        var overlay = el('div', { id: 'lumos-import-overlay', style: {
             position: 'fixed', inset: '0', background: 'rgba(0,0,0,.55)',
             zIndex: '999999', display: 'flex', alignItems: 'center', justifyContent: 'center',
         }});
@@ -702,8 +702,8 @@
             el('button', {
                 style: { background: 'none', border: 'none', color: '#2271b1', cursor: 'pointer', fontSize: '12px', fontWeight: '600', padding: '0' },
                 on: { click: function () {
-                    if (navigator.clipboard && lumoSEO.exampleJson) {
-                        navigator.clipboard.writeText(lumoSEO.exampleJson).then(function () {
+                    if (navigator.clipboard && lumosSEO.exampleJson) {
+                        navigator.clipboard.writeText(lumosSEO.exampleJson).then(function () {
                             exampleHint.querySelector('button').textContent = '✓ Copied!';
                         });
                     }
@@ -717,8 +717,8 @@
             boxSizing: 'border-box', resize: 'vertical', background: '#f9fafb',
         }, placeholder: '{\n  "focus_keyword": "...",\n  "meta_title": "...",\n  "meta_description": "..."\n}' });
 
-        var feedback = el('div', { id: 'lumo-import-feedback', style: { marginTop: '10px' }});
-        var advisory = el('div', { id: 'lumo-import-advisory', style: { marginTop: '8px' }});
+        var feedback = el('div', { id: 'lumos-import-feedback', style: { marginTop: '10px' }});
+        var advisory = el('div', { id: 'lumos-import-advisory', style: { marginTop: '8px' }});
 
         var btnRow = el('div', { style: { display: 'flex', gap: '8px', justifyContent: 'flex-end', marginTop: '16px' }});
         var cancelBtn = el('button', {
@@ -728,7 +728,7 @@
 
         var state_parsed = null;
         var importBtn = el('button', {
-            className: 'lumo-import-btn',
+            className: 'lumos-import-btn',
             style: { background: '#2271b1', color: '#fff', border: 'none', borderRadius: '4px', padding: '8px 16px', cursor: 'pointer', fontSize: '13px', fontWeight: '600' },
             on: { click: function () {
                 if (state_parsed && state_parsed.result) {
@@ -807,14 +807,14 @@
     }
 
     function openImportModal() {
-        var existing = document.getElementById('lumo-import-overlay');
+        var existing = document.getElementById('lumos-import-overlay');
         if (existing) { document.body.removeChild(existing); return; }
         document.body.appendChild(buildImportModal());
     }
 
     // ── FAB (floating action button) ──────────────────────────────────────
     function createFAB() {
-        var fab = el('button', { id: 'lumo-seo-fab', className: 'lumo-seo-fab' }, [
+        var fab = el('button', { id: 'lumos-seo-fab', className: 'lumos-seo-fab' }, [
             el('span', { style: { fontSize: '16px', lineHeight: '1' } }, '🔍'),
             el('span', { style: { fontSize: '11px', fontWeight: '700' } }, 'SEO'),
         ]);
@@ -853,6 +853,6 @@
     }
 
     // ── AJAX meta save handler (register in PHP) ──────────────────────────
-    // The server-side handler is in class-meta-box.php under wp_ajax_lumo_seo_save_meta
+    // The server-side handler is in class-meta-box.php under wp_ajax_lumos_seo_save_meta
 
 })(jQuery);

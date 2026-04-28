@@ -1,29 +1,29 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-class Lumo_SEO_Meta_Box {
+class Lumos_SEO_Meta_Box {
 
     // All meta keys and their sanitization callbacks
     const FIELD_MAP = [
-        '_lumo_focus_keyword'      => 'sanitize_text_field',
-        '_lumo_meta_title'         => 'sanitize_text_field',
-        '_lumo_meta_description'   => 'sanitize_textarea_field',
+        '_lumos_focus_keyword'      => 'sanitize_text_field',
+        '_lumos_meta_title'         => 'sanitize_text_field',
+        '_lumos_meta_description'   => 'sanitize_textarea_field',
         // OG core
-        '_lumo_og_title'           => 'sanitize_text_field',
-        '_lumo_og_description'     => 'sanitize_textarea_field',
-        '_lumo_og_image'           => 'esc_url_raw',
-        '_lumo_og_url'             => 'esc_url_raw',
-        '_lumo_og_type'            => 'sanitize_text_field',
-        '_lumo_og_site_name'       => 'sanitize_text_field',
-        '_lumo_og_locale'          => 'sanitize_text_field',
+        '_lumos_og_title'           => 'sanitize_text_field',
+        '_lumos_og_description'     => 'sanitize_textarea_field',
+        '_lumos_og_image'           => 'esc_url_raw',
+        '_lumos_og_url'             => 'esc_url_raw',
+        '_lumos_og_type'            => 'sanitize_text_field',
+        '_lumos_og_site_name'       => 'sanitize_text_field',
+        '_lumos_og_locale'          => 'sanitize_text_field',
         // Twitter
-        '_lumo_twitter_card'       => 'sanitize_text_field',
-        '_lumo_twitter_title'      => 'sanitize_text_field',
-        '_lumo_twitter_description'=> 'sanitize_textarea_field',
-        '_lumo_twitter_image'      => 'esc_url_raw',
+        '_lumos_twitter_card'       => 'sanitize_text_field',
+        '_lumos_twitter_title'      => 'sanitize_text_field',
+        '_lumos_twitter_description'=> 'sanitize_textarea_field',
+        '_lumos_twitter_image'      => 'esc_url_raw',
         // Advanced
-        '_lumo_canonical'          => 'esc_url_raw',
-        '_lumo_noindex'            => 'sanitize_text_field',
+        '_lumos_canonical'          => 'esc_url_raw',
+        '_lumos_noindex'            => 'sanitize_text_field',
     ];
 
     public function __construct() {
@@ -32,9 +32,9 @@ class Lumo_SEO_Meta_Box {
         add_action( 'save_post',                   [ $this, 'save' ] );
         add_action( 'admin_enqueue_scripts',       [ $this, 'enqueue_classic' ] );
         add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue_block' ] );
-        add_action( 'wp_ajax_lumo_seo_analyze',    [ $this, 'ajax_analyze' ] );
-        add_action( 'wp_ajax_lumo_seo_save_meta',  [ $this, 'ajax_save_meta' ] );
-        add_action( 'wp_ajax_lumo_seo_import_json',[ $this, 'ajax_import_json' ] );
+        add_action( 'wp_ajax_lumos_seo_analyze',    [ $this, 'ajax_analyze' ] );
+        add_action( 'wp_ajax_lumos_seo_save_meta',  [ $this, 'ajax_save_meta' ] );
+        add_action( 'wp_ajax_lumos_seo_import_json',[ $this, 'ajax_import_json' ] );
     }
 
     // ── Meta registration ──────────────────────────────────────────────────
@@ -51,40 +51,40 @@ class Lumo_SEO_Meta_Box {
 
     // ── Meta box (shows in both classic AND block editor) ──────────────────
     public function register_classic_box() {
-        $types = apply_filters( 'lumo_seo_post_types', [ 'post', 'page' ] );
+        $types = apply_filters( 'lumos_seo_post_types', [ 'post', 'page' ] );
         foreach ( $types as $type ) {
-            add_meta_box( 'lumo_seo_box', '🔍 Lumo SEO', [ $this, 'render' ], $type, 'normal', 'high' );
+            add_meta_box( 'lumos_seo_box', '🔍 Lumos SEO', [ $this, 'render' ], $type, 'normal', 'high' );
         }
     }
 
     public function enqueue_classic( $hook ) {
         if ( ! in_array( $hook, [ 'post.php', 'post-new.php' ], true ) ) return;
         wp_enqueue_media();
-        wp_enqueue_style( 'lumo-seo', LUMO_SEO_URL . 'assets/css/admin.css', [], LUMO_SEO_VERSION );
-        wp_enqueue_script( 'lumo-seo', LUMO_SEO_URL . 'assets/js/admin.js', [ 'jquery' ], LUMO_SEO_VERSION, true );
-        wp_localize_script( 'lumo-seo', 'lumoSEO', $this->script_data() );
+        wp_enqueue_style( 'lumos-seo', LUMOS_SEO_URL . 'assets/css/admin.css', [], LUMOS_SEO_VERSION );
+        wp_enqueue_script( 'lumos-seo', LUMOS_SEO_URL . 'assets/js/admin.js', [ 'jquery' ], LUMOS_SEO_VERSION, true );
+        wp_localize_script( 'lumos-seo', 'lumoSEO', $this->script_data() );
     }
 
     public function enqueue_block() {
-        wp_enqueue_style( 'lumo-seo-block', LUMO_SEO_URL . 'assets/css/sidebar.css', [], LUMO_SEO_VERSION );
+        wp_enqueue_style( 'lumos-seo-block', LUMOS_SEO_URL . 'assets/css/sidebar.css', [], LUMOS_SEO_VERSION );
         wp_enqueue_script(
-            'lumo-seo-block',
-            LUMO_SEO_URL . 'assets/js/gutenberg.js',
+            'lumos-seo-block',
+            LUMOS_SEO_URL . 'assets/js/gutenberg.js',
             [ 'wp-plugins', 'wp-edit-post', 'wp-element', 'wp-components', 'wp-data', 'wp-i18n', 'jquery' ],
-            LUMO_SEO_VERSION,
+            LUMOS_SEO_VERSION,
             true
         );
-        wp_localize_script( 'lumo-seo-block', 'lumoSEO', $this->script_data() );
+        wp_localize_script( 'lumos-seo-block', 'lumoSEO', $this->script_data() );
     }
 
     private function script_data() {
         $post_id = get_the_ID();
         return [
             'ajaxurl'     => admin_url( 'admin-ajax.php' ),
-            'nonce'       => wp_create_nonce( 'lumo_seo_nonce' ),
+            'nonce'       => wp_create_nonce( 'lumos_seo_nonce' ),
             'post_id'     => $post_id,
             'siteUrl'     => home_url(),
-            'siteName'    => get_option( 'lumo_seo_site_name', get_bloginfo( 'name' ) ),
+            'siteName'    => get_option( 'lumos_seo_site_name', get_bloginfo( 'name' ) ),
             'exampleJson' => $this->example_json(),
         ];
     }
@@ -120,31 +120,31 @@ class Lumo_SEO_Meta_Box {
 
     // ── Classic editor render ──────────────────────────────────────────────
     public function render( $post ) {
-        wp_nonce_field( 'lumo_seo_save', 'lumo_seo_nonce' );
+        wp_nonce_field( 'lumos_seo_save', 'lumos_seo_nonce' );
         $m = [];
         foreach ( array_keys( self::FIELD_MAP ) as $key ) {
             $m[ $key ] = get_post_meta( $post->ID, $key, true );
         }
         // Convenience aliases used in template
         extract( $m ); // phpcs:ignore WordPress.PHP.DontExtract
-        $focus_kw   = $m['_lumo_focus_keyword'];
-        $meta_title = $m['_lumo_meta_title'] ?: get_the_title( $post->ID );
-        $meta_desc  = $m['_lumo_meta_description'];
-        $noindex    = $m['_lumo_noindex'];
-        include LUMO_SEO_DIR . 'templates/meta-box.php';
+        $focus_kw   = $m['_lumos_focus_keyword'];
+        $meta_title = $m['_lumos_meta_title'] ?: get_the_title( $post->ID );
+        $meta_desc  = $m['_lumos_meta_description'];
+        $noindex    = $m['_lumos_noindex'];
+        include LUMOS_SEO_DIR . 'templates/meta-box.php';
     }
 
     // ── Classic editor save ────────────────────────────────────────────────
     public function save( $post_id ) {
-        if ( ! isset( $_POST['lumo_seo_nonce'] ) ) return;
-        if ( ! wp_verify_nonce( $_POST['lumo_seo_nonce'], 'lumo_seo_save' ) ) return;
+        if ( ! isset( $_POST['lumos_seo_nonce'] ) ) return;
+        if ( ! wp_verify_nonce( $_POST['lumos_seo_nonce'], 'lumos_seo_save' ) ) return;
         if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
         if ( ! current_user_can( 'edit_post', $post_id ) ) return;
 
         foreach ( self::FIELD_MAP as $key => $cb ) {
-            $post_key = ltrim( $key, '_' );           // _lumo_og_title → lumo_og_title
-            $post_key = str_replace( 'lumo_', '', $post_key ); // → og_title
-            if ( $key === '_lumo_noindex' ) {
+            $post_key = ltrim( $key, '_' );           // _lumos_og_title → lumo_og_title
+            $post_key = str_replace( 'lumos_', '', $post_key ); // → og_title
+            if ( $key === '_lumos_noindex' ) {
                 update_post_meta( $post_id, $key, isset( $_POST['noindex'] ) ? '1' : '' );
                 continue;
             }
@@ -156,7 +156,7 @@ class Lumo_SEO_Meta_Box {
 
     // ── AJAX: single meta save (Elementor live edits) ──────────────────────
     public function ajax_save_meta() {
-        check_ajax_referer( 'lumo_seo_nonce', 'nonce' );
+        check_ajax_referer( 'lumos_seo_nonce', 'nonce' );
         $post_id = intval( $_POST['post_id'] ?? 0 );
         if ( ! $post_id || ! current_user_can( 'edit_post', $post_id ) ) wp_send_json_error();
 
@@ -171,7 +171,7 @@ class Lumo_SEO_Meta_Box {
 
     // ── AJAX: bulk JSON import ─────────────────────────────────────────────
     public function ajax_import_json() {
-        check_ajax_referer( 'lumo_seo_nonce', 'nonce' );
+        check_ajax_referer( 'lumos_seo_nonce', 'nonce' );
         $post_id = intval( $_POST['post_id'] ?? 0 );
         if ( ! $post_id || ! current_user_can( 'edit_post', $post_id ) ) wp_send_json_error( 'Permission denied' );
 
@@ -181,21 +181,21 @@ class Lumo_SEO_Meta_Box {
 
         // Map JSON keys → meta keys
         $json_to_meta = [
-            'focus_keyword'         => '_lumo_focus_keyword',
-            'meta_title'            => '_lumo_meta_title',
-            'meta_description'      => '_lumo_meta_description',
-            'og_title'              => '_lumo_og_title',
-            'og_description'        => '_lumo_og_description',
-            'og_image'              => '_lumo_og_image',
-            'og_url'                => '_lumo_og_url',
-            'og_type'               => '_lumo_og_type',
-            'og_site_name'          => '_lumo_og_site_name',
-            'og_locale'             => '_lumo_og_locale',
-            'twitter_card'          => '_lumo_twitter_card',
-            'twitter_title'         => '_lumo_twitter_title',
-            'twitter_description'   => '_lumo_twitter_description',
-            'twitter_image'         => '_lumo_twitter_image',
-            'canonical'             => '_lumo_canonical',
+            'focus_keyword'         => '_lumos_focus_keyword',
+            'meta_title'            => '_lumos_meta_title',
+            'meta_description'      => '_lumos_meta_description',
+            'og_title'              => '_lumos_og_title',
+            'og_description'        => '_lumos_og_description',
+            'og_image'              => '_lumos_og_image',
+            'og_url'                => '_lumos_og_url',
+            'og_type'               => '_lumos_og_type',
+            'og_site_name'          => '_lumos_og_site_name',
+            'og_locale'             => '_lumos_og_locale',
+            'twitter_card'          => '_lumos_twitter_card',
+            'twitter_title'         => '_lumos_twitter_title',
+            'twitter_description'   => '_lumos_twitter_description',
+            'twitter_image'         => '_lumos_twitter_image',
+            'canonical'             => '_lumos_canonical',
         ];
 
         $applied  = [];
@@ -221,13 +221,13 @@ class Lumo_SEO_Meta_Box {
         }
 
         if ( array_key_exists( 'noindex', $data ) ) {
-            update_post_meta( $post_id, '_lumo_noindex', $data['noindex'] ? '1' : '' );
+            update_post_meta( $post_id, '_lumos_noindex', $data['noindex'] ? '1' : '' );
             $applied[] = 'noindex';
         }
 
         if ( empty( $applied ) ) wp_send_json_error( 'No recognised SEO fields found in the JSON.' );
 
-        $analyzer = new Lumo_SEO_Analyzer();
+        $analyzer = new Lumos_SEO_Analyzer();
         wp_send_json_success( [
             'applied'  => $applied,
             'warnings' => $warnings,
@@ -237,11 +237,11 @@ class Lumo_SEO_Meta_Box {
 
     // ── AJAX: analysis ─────────────────────────────────────────────────────
     public function ajax_analyze() {
-        check_ajax_referer( 'lumo_seo_nonce', 'nonce' );
+        check_ajax_referer( 'lumos_seo_nonce', 'nonce' );
         $post_id = intval( $_POST['post_id'] ?? 0 );
         if ( ! $post_id || ! current_user_can( 'edit_post', $post_id ) ) wp_send_json_error();
 
-        $analyzer = new Lumo_SEO_Analyzer();
+        $analyzer = new Lumos_SEO_Analyzer();
         $result   = $analyzer->analyze( $post_id, [
             'focus_keyword'    => sanitize_text_field( $_POST['focus_keyword']    ?? '' ),
             'meta_title'       => sanitize_text_field( $_POST['meta_title']       ?? '' ),

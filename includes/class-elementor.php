@@ -1,7 +1,7 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-class Lumo_SEO_Elementor {
+class Lumos_SEO_Elementor {
 
     public function __construct() {
         // Only hook when Elementor is active
@@ -18,44 +18,44 @@ class Lumo_SEO_Elementor {
 
     public function enqueue() {
         wp_enqueue_script(
-            'lumo-seo-elementor',
-            LUMO_SEO_URL . 'assets/js/elementor.js',
+            'lumos-seo-elementor',
+            LUMOS_SEO_URL . 'assets/js/elementor.js',
             [ 'jquery', 'elementor-editor' ],
-            LUMO_SEO_VERSION,
+            LUMOS_SEO_VERSION,
             true
         );
-        wp_localize_script( 'lumo-seo-elementor', 'lumoSEO', [
+        wp_localize_script( 'lumos-seo-elementor', 'lumoSEO', [
             'ajaxurl' => admin_url( 'admin-ajax.php' ),
-            'nonce'   => wp_create_nonce( 'lumo_seo_nonce' ),
+            'nonce'   => wp_create_nonce( 'lumos_seo_nonce' ),
             'post_id' => get_the_ID(),
             'siteUrl' => home_url(),
             'meta'    => [
-                'focus_keyword'        => get_post_meta( get_the_ID(), '_lumo_focus_keyword', true ),
-                'meta_title'           => get_post_meta( get_the_ID(), '_lumo_meta_title', true ),
-                'meta_description'     => get_post_meta( get_the_ID(), '_lumo_meta_description', true ),
-                'og_title'             => get_post_meta( get_the_ID(), '_lumo_og_title', true ),
-                'og_description'       => get_post_meta( get_the_ID(), '_lumo_og_description', true ),
-                'og_image'             => get_post_meta( get_the_ID(), '_lumo_og_image', true ),
-                'og_url'               => get_post_meta( get_the_ID(), '_lumo_og_url', true ),
-                'og_type'              => get_post_meta( get_the_ID(), '_lumo_og_type', true ),
-                'og_site_name'         => get_post_meta( get_the_ID(), '_lumo_og_site_name', true ),
-                'og_locale'            => get_post_meta( get_the_ID(), '_lumo_og_locale', true ),
-                'twitter_card'         => get_post_meta( get_the_ID(), '_lumo_twitter_card', true ),
-                'twitter_title'        => get_post_meta( get_the_ID(), '_lumo_twitter_title', true ),
-                'twitter_description'  => get_post_meta( get_the_ID(), '_lumo_twitter_description', true ),
-                'twitter_image'        => get_post_meta( get_the_ID(), '_lumo_twitter_image', true ),
-                'noindex'              => get_post_meta( get_the_ID(), '_lumo_noindex', true ),
-                'canonical'            => get_post_meta( get_the_ID(), '_lumo_canonical', true ),
+                'focus_keyword'        => get_post_meta( get_the_ID(), '_lumos_focus_keyword', true ),
+                'meta_title'           => get_post_meta( get_the_ID(), '_lumos_meta_title', true ),
+                'meta_description'     => get_post_meta( get_the_ID(), '_lumos_meta_description', true ),
+                'og_title'             => get_post_meta( get_the_ID(), '_lumos_og_title', true ),
+                'og_description'       => get_post_meta( get_the_ID(), '_lumos_og_description', true ),
+                'og_image'             => get_post_meta( get_the_ID(), '_lumos_og_image', true ),
+                'og_url'               => get_post_meta( get_the_ID(), '_lumos_og_url', true ),
+                'og_type'              => get_post_meta( get_the_ID(), '_lumos_og_type', true ),
+                'og_site_name'         => get_post_meta( get_the_ID(), '_lumos_og_site_name', true ),
+                'og_locale'            => get_post_meta( get_the_ID(), '_lumos_og_locale', true ),
+                'twitter_card'         => get_post_meta( get_the_ID(), '_lumos_twitter_card', true ),
+                'twitter_title'        => get_post_meta( get_the_ID(), '_lumos_twitter_title', true ),
+                'twitter_description'  => get_post_meta( get_the_ID(), '_lumos_twitter_description', true ),
+                'twitter_image'        => get_post_meta( get_the_ID(), '_lumos_twitter_image', true ),
+                'noindex'              => get_post_meta( get_the_ID(), '_lumos_noindex', true ),
+                'canonical'            => get_post_meta( get_the_ID(), '_lumos_canonical', true ),
             ],
         ] );
     }
 
     public function enqueue_styles() {
         wp_enqueue_style(
-            'lumo-seo-elementor',
-            LUMO_SEO_URL . 'assets/css/elementor.css',
+            'lumos-seo-elementor',
+            LUMOS_SEO_URL . 'assets/css/elementor.css',
             [],
-            LUMO_SEO_VERSION
+            LUMOS_SEO_VERSION
         );
     }
 

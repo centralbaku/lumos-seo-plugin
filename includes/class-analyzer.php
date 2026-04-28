@@ -1,7 +1,7 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-class Lumo_SEO_Analyzer {
+class Lumos_SEO_Analyzer {
 
     /**
      * Priority levels mapped to the SEO importance framework.
@@ -25,9 +25,9 @@ class Lumo_SEO_Analyzer {
 
         // Prefer live editor values; fall back to saved meta / post content
         $content    = $args['content']          ?? $this->get_content( $post );
-        $focus_kw   = $args['focus_keyword']    ?? get_post_meta( $post_id, '_lumo_focus_keyword', true );
-        $meta_title = $args['meta_title']       ?? get_post_meta( $post_id, '_lumo_meta_title', true ) ?: get_the_title( $post_id );
-        $meta_desc  = $args['meta_description'] ?? get_post_meta( $post_id, '_lumo_meta_description', true );
+        $focus_kw   = $args['focus_keyword']    ?? get_post_meta( $post_id, '_lumos_focus_keyword', true );
+        $meta_title = $args['meta_title']       ?? get_post_meta( $post_id, '_lumos_meta_title', true ) ?: get_the_title( $post_id );
+        $meta_desc  = $args['meta_description'] ?? get_post_meta( $post_id, '_lumos_meta_description', true );
         $plain      = wp_strip_all_tags( $content );
 
         $seo_checks  = [];
@@ -198,7 +198,7 @@ class Lumo_SEO_Analyzer {
             'post_status'    => 'publish',
             'posts_per_page' => 1,
             'post__not_in'   => [ $post_id ],
-            'meta_query'     => [ [ 'key' => '_lumo_focus_keyword', 'value' => $kw ] ],
+            'meta_query'     => [ [ 'key' => '_lumos_focus_keyword', 'value' => $kw ] ],
         ] );
         if ( $existing ) {
             $link = '<a href="' . esc_url( get_edit_post_link( $existing[0]->ID ) ) . '">' . esc_html( $existing[0]->post_title ) . '</a>';

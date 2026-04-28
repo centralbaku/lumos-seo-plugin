@@ -1,4 +1,4 @@
-/* Lumo SEO — Classic / Meta Box JS */
+/* Lumos SEO — Classic / Meta Box JS */
 (function ($) {
     'use strict';
 
@@ -29,7 +29,7 @@
     // ── Media library picker ──────────────────────────────────────────────
     var mediaFrames = {};
 
-    $(document).on('click', '.lumo-btn-media', function () {
+    $(document).on('click', '.lumos-btn-media', function () {
         var $btn     = $(this);
         var targetSel  = $btn.data('target');
         var previewSel = $btn.data('preview');
@@ -52,14 +52,14 @@
             var url = attachment.url;
             $(targetSel).val(url).trigger('input');
             $(previewSel).attr('src', url).show();
-            $btn.siblings('.lumo-btn-media-remove').show();
+            $btn.siblings('.lumos-btn-media-remove').show();
         });
 
         mediaFrames[ frameKey ] = frame;
         frame.open();
     });
 
-    $(document).on('click', '.lumo-btn-media-remove', function () {
+    $(document).on('click', '.lumos-btn-media-remove', function () {
         var $btn       = $(this);
         var targetSel  = $btn.data('target');
         var previewSel = $btn.data('preview');
@@ -69,20 +69,20 @@
     });
 
     // ── Tab switching ─────────────────────────────────────────────────────
-    $(document).on('click', '.lumo-mb-tab', function () {
+    $(document).on('click', '.lumos-mb-tab', function () {
         var tab = $(this).data('tab');
-        $('.lumo-mb-tab').removeClass('active');
-        $('.lumo-mb-panel').removeClass('active');
+        $('.lumos-mb-tab').removeClass('active');
+        $('.lumos-mb-panel').removeClass('active');
         $(this).addClass('active');
-        $('#lumo-tab-' + tab).addClass('active');
+        $('#lumos-tab-' + tab).addClass('active');
     });
 
     // ── Snippet preview ───────────────────────────────────────────────────
     function updateSnippet() {
         var title = $('#lm_meta_title').val() || $('input#title').val() || '(no title)';
         var desc  = $('#lm_meta_description').val() || 'No meta description set.';
-        $('#lumo-preview-title').text(title);
-        $('#lumo-preview-desc').text(desc);
+        $('#lumos-preview-title').text(title);
+        $('#lumos-preview-desc').text(desc);
     }
     $('#lm_meta_title, #lm_meta_description').on('input', updateSnippet);
     $(document).on('input', '#title', function () {
@@ -115,10 +115,10 @@
         var title = $('#lm_og_title').val()       || $('#lm_meta_title').val()       || '(no title)';
         var desc  = $('#lm_og_description').val() || $('#lm_meta_description').val() || '';
         var img   = $('#lm_og_image').val();
-        $('#lumo-og-card-title').text(title);
-        $('#lumo-og-card-desc').text(desc);
+        $('#lumos-og-card-title').text(title);
+        $('#lumos-og-card-desc').text(desc);
         if (img) {
-            $('#lumo-og-card-img').css('background-image', 'url(' + img + ')');
+            $('#lumos-og-card-img').css('background-image', 'url(' + img + ')');
             $('#lm_og_image_preview').attr('src', img).show();
         }
     }
@@ -129,20 +129,20 @@
         var title = $('#lm_twitter_title').val()       || $('#lm_og_title').val()       || $('#lm_meta_title').val()       || '(no title)';
         var desc  = $('#lm_twitter_description').val() || $('#lm_og_description').val() || $('#lm_meta_description').val() || '';
         var img   = $('#lm_twitter_image').val()       || $('#lm_og_image').val();
-        $('#lumo-tw-card-title').text(title);
-        $('#lumo-tw-card-desc').text(desc);
+        $('#lumos-tw-card-title').text(title);
+        $('#lumos-tw-card-desc').text(desc);
         if (img) {
-            $('#lumo-tw-card-img').css('background-image', 'url(' + img + ')');
+            $('#lumos-tw-card-img').css('background-image', 'url(' + img + ')');
             $('#lm_twitter_image_preview').attr('src', img).show();
         }
     }
     $('#lm_twitter_title, #lm_twitter_description, #lm_twitter_image').on('input', updateTWCard);
 
     // ── SEO Analysis ──────────────────────────────────────────────────────
-    $('#lumo-analyze-btn').on('click', function () {
+    $('#lumos-analyze-btn').on('click', function () {
         var $btn = $(this);
         $btn.prop('disabled', true);
-        $('#lumo-analyzing').show();
+        $('#lumos-analyzing').show();
 
         var content = '';
         if (window.wp && wp.data && wp.data.select('core/editor')) {
@@ -153,10 +153,10 @@
                 : $('#content').val();
         }
 
-        $.post(lumoSEO.ajaxurl, {
-            action:           'lumo_seo_analyze',
-            nonce:            lumoSEO.nonce,
-            post_id:          lumoSEO.post_id,
+        $.post(lumosSEO.ajaxurl, {
+            action:           'lumos_seo_analyze',
+            nonce:            lumosSEO.nonce,
+            post_id:          lumosSEO.post_id,
             focus_keyword:    $('#lm_focus_keyword').val(),
             meta_title:       $('#lm_meta_title').val(),
             meta_description: $('#lm_meta_description').val(),
@@ -167,20 +167,20 @@
         })
         .always(function () {
             $btn.prop('disabled', false);
-            $('#lumo-analyzing').hide();
+            $('#lumos-analyzing').hide();
         });
     });
 
     var lastAnalysisData = null;
 
     // ── Copy report for GPT ───────────────────────────────────────────────
-    $('#lumo-copy-report').on('click', function () {
+    $('#lumos-copy-report').on('click', function () {
         if (!lastAnalysisData) return;
         var text = buildReportText(lastAnalysisData);
         if (navigator.clipboard) {
             navigator.clipboard.writeText(text).then(function () {
-                $('#lumo-copy-report').text('✓ Copied!');
-                setTimeout(function () { $('#lumo-copy-report').text('📋 Copy report for GPT'); }, 2500);
+                $('#lumos-copy-report').text('✓ Copied!');
+                setTimeout(function () { $('#lumos-copy-report').text('📋 Copy report for GPT'); }, 2500);
             });
         }
     });
@@ -257,22 +257,22 @@
     function renderResults(data) {
         lastAnalysisData = data;
         var score = data.score;
-        $('#lumo-results').show();
+        $('#lumos-results').show();
 
         // Donut arc
-        var arc = document.getElementById('lumo-arc');
+        var arc = document.getElementById('lumos-arc');
         if (arc) {
             var color = score >= 70 ? '#46b450' : score >= 40 ? '#ffb900' : '#dc3232';
             arc.setAttribute('stroke-dasharray', score + ',100');
             arc.setAttribute('stroke', color);
         }
-        $('#lumo-score-num').text(score);
-        $('#lumo-score-label')
+        $('#lumos-score-num').text(score);
+        $('#lumos-score-label')
             .text(score >= 70 ? '😊 Great' : score >= 40 ? '😐 Needs work' : '😟 Poor')
             .css('color', score >= 70 ? '#46b450' : score >= 40 ? '#ffb900' : '#dc3232');
 
-        $('#lumo-checks-seo').html(buildChecklist(data.seo,  'SEO Analysis'));
-        $('#lumo-checks-read').html(buildChecklist(data.read, 'Readability'));
+        $('#lumos-checks-seo').html(buildChecklist(data.seo,  'SEO Analysis'));
+        $('#lumos-checks-read').html(buildChecklist(data.read, 'Readability'));
 
         // Show how many issues JSON can fix vs need content edits
         var allChecks = (data.seo || []).concat(data.read || []);
@@ -281,13 +281,13 @@
         var contentFixes = nonGood.length - metaFixes.length;
         var tip = '';
         if (metaFixes.length) {
-            tip += '<span class="lumo-fix-tag lumo-fix-meta">✦ ' + metaFixes.length + ' fixable via JSON import</span>';
+            tip += '<span class="lumos-fix-tag lumos-fix-meta">✦ ' + metaFixes.length + ' fixable via JSON import</span>';
         }
         if (contentFixes) {
-            tip += '<span class="lumo-fix-tag lumo-fix-content">✎ ' + contentFixes + ' require content edits</span>';
+            tip += '<span class="lumos-fix-tag lumos-fix-content">✎ ' + contentFixes + ' require content edits</span>';
         }
-        $('#lumo-fix-summary').html(tip).show();
-        $('#lumo-copy-report').show().text('📋 Copy report for GPT');
+        $('#lumos-fix-summary').html(tip).show();
+        $('#lumos-copy-report').show().text('📋 Copy report for GPT');
     }
 
     var PRIORITY_CFG = {
@@ -307,18 +307,18 @@
         var improvements = sorted.filter(function (c) { return c.status === 'ok'; });
         var good         = sorted.filter(function (c) { return c.status === 'good'; });
 
-        var html = '<div class="lumo-check-section-label">' + groupLabel + '</div>';
+        var html = '<div class="lumos-check-section-label">' + groupLabel + '</div>';
         [[problems,'Problems'],[improvements,'Improvements'],[good,'Good results']].forEach(function (g) {
             if (!g[0].length) return;
-            html += '<details class="lumo-check-group" ' + (g[1] !== 'Good results' ? 'open' : '') + '>';
-            html += '<summary class="lumo-check-group-title">' + g[1] + ' <span>(' + g[0].length + ')</span></summary>';
-            html += '<div class="lumo-check-list">';
+            html += '<details class="lumos-check-group" ' + (g[1] !== 'Good results' ? 'open' : '') + '>';
+            html += '<summary class="lumos-check-group-title">' + g[1] + ' <span>(' + g[0].length + ')</span></summary>';
+            html += '<div class="lumos-check-list">';
             g[0].forEach(function (c) {
                 var pc = PRIORITY_CFG[c.priority] || PRIORITY_CFG.low;
-                html += '<div class="lumo-check-row">';
-                html += '<span class="lumo-dot" style="background:' + (STATUS_DOT[c.status]||'#ccc') + '"></span>';
-                html += '<span class="lumo-check-msg">' + c.message + '</span>';
-                html += '<span class="lumo-prio-badge" style="color:' + pc.color + ';background:' + pc.bg + '">' + pc.label + '</span>';
+                html += '<div class="lumos-check-row">';
+                html += '<span class="lumos-dot" style="background:' + (STATUS_DOT[c.status]||'#ccc') + '"></span>';
+                html += '<span class="lumos-check-msg">' + c.message + '</span>';
+                html += '<span class="lumos-prio-badge" style="color:' + pc.color + ';background:' + pc.bg + '">' + pc.label + '</span>';
                 html += '</div>';
             });
             html += '</div></details>';
@@ -330,42 +330,42 @@
     var parsedImport = null;
 
     function openModal() {
-        $('#lumo-import-modal').show();
+        $('#lumos-import-modal').show();
         document.body.style.overflow = 'hidden';
     }
     function closeModal() {
-        $('#lumo-import-modal').hide();
+        $('#lumos-import-modal').hide();
         document.body.style.overflow = '';
     }
 
-    $('#lumo-open-import').on('click', function () {
+    $('#lumos-open-import').on('click', function () {
         openModal();
         parsedImport = null;
-        $('#lumo-validate-import').text('Validate & Preview');
-        $('#lumo-import-feedback, #lumo-import-advisory').html('');
-        $('#lumo-import-json').val('');
+        $('#lumos-validate-import').text('Validate & Preview');
+        $('#lumos-import-feedback, #lumos-import-advisory').html('');
+        $('#lumos-import-json').val('');
     });
 
-    $('#lumo-close-import, #lumo-close-import-2').on('click', closeModal);
+    $('#lumos-close-import, #lumos-close-import-2').on('click', closeModal);
 
     // Close on overlay click
-    $('#lumo-import-modal').on('click', function (e) {
-        if ($(e.target).is('#lumo-import-modal')) closeModal();
+    $('#lumos-import-modal').on('click', function (e) {
+        if ($(e.target).is('#lumos-import-modal')) closeModal();
     });
 
     // Copy example JSON
-    $('#lumo-copy-example').on('click', function () {
-        if (navigator.clipboard && lumoSEO.exampleJson) {
-            navigator.clipboard.writeText(lumoSEO.exampleJson).then(function () {
-                $('#lumo-copy-example').text('✓ Copied!');
-                setTimeout(function () { $('#lumo-copy-example').text('Copy example JSON'); }, 2000);
+    $('#lumos-copy-example').on('click', function () {
+        if (navigator.clipboard && lumosSEO.exampleJson) {
+            navigator.clipboard.writeText(lumosSEO.exampleJson).then(function () {
+                $('#lumos-copy-example').text('✓ Copied!');
+                setTimeout(function () { $('#lumos-copy-example').text('Copy example JSON'); }, 2000);
             });
         }
     });
 
     // Validate → Apply (two-step)
-    $('#lumo-validate-import').on('click', function () {
-        var raw = $('#lumo-import-json').val().trim();
+    $('#lumos-validate-import').on('click', function () {
+        var raw = $('#lumos-import-json').val().trim();
         if (!raw) return;
 
         if (parsedImport) {
@@ -378,8 +378,8 @@
         // First click: Validate
         var result = validateJson(raw);
         if (result.error) {
-            $('#lumo-import-feedback').html(
-                '<div class="lumo-feedback-error">✕ ' + escHtml(result.error) + '</div>'
+            $('#lumos-import-feedback').html(
+                '<div class="lumos-feedback-error">✕ ' + escHtml(result.error) + '</div>'
             );
             return;
         }
@@ -387,33 +387,33 @@
         parsedImport = result;
 
         // Show success feedback
-        var fb = '<div class="lumo-feedback-ok"><strong>✓ Ready to apply</strong><ul>';
+        var fb = '<div class="lumos-feedback-ok"><strong>✓ Ready to apply</strong><ul>';
         result.applied.forEach(function (k) { fb += '<li style="color:#1e8449">' + escHtml(k) + '</li>'; });
         result.warnings.forEach(function (w) { fb += '<li style="color:#d35400">⚠ ' + escHtml(w) + '</li>'; });
         fb += '</ul></div>';
-        $('#lumo-import-feedback').html(fb);
+        $('#lumos-import-feedback').html(fb);
 
         // Advisory sections
         var adv = '';
         if (result.advisory.suggested_headings && result.advisory.suggested_headings.length) {
-            adv += '<div class="lumo-advisory lumo-advisory--headings"><strong>💡 Suggested headings:</strong><ul>';
+            adv += '<div class="lumos-advisory lumos-advisory--headings"><strong>💡 Suggested headings:</strong><ul>';
             result.advisory.suggested_headings.forEach(function (h) { adv += '<li>' + escHtml(h) + '</li>'; });
             adv += '</ul></div>';
         }
         if (result.advisory.content_notes) {
-            adv += '<div class="lumo-advisory lumo-advisory--notes"><strong>📝 Content notes:</strong> ' + escHtml(result.advisory.content_notes) + '</div>';
+            adv += '<div class="lumos-advisory lumos-advisory--notes"><strong>📝 Content notes:</strong> ' + escHtml(result.advisory.content_notes) + '</div>';
         }
         if (result.advisory.related_keywords && result.advisory.related_keywords.length) {
-            adv += '<div class="lumo-advisory lumo-advisory--kw"><strong>🔑 Related keywords:</strong> ' + escHtml(result.advisory.related_keywords.join(', ')) + '</div>';
+            adv += '<div class="lumos-advisory lumos-advisory--kw"><strong>🔑 Related keywords:</strong> ' + escHtml(result.advisory.related_keywords.join(', ')) + '</div>';
         }
-        $('#lumo-import-advisory').html(adv);
+        $('#lumos-import-advisory').html(adv);
 
         $(this).text('✓ Apply Import').css('background', '#46b450');
     });
 
     // ── File picker ───────────────────────────────────────────────────────
-    var $dropZone = $('#lumo-file-drop');
-    var $fileInput = $('#lumo-json-file');
+    var $dropZone = $('#lumos-file-drop');
+    var $fileInput = $('#lumos-json-file');
 
     // Clicking anywhere on the drop zone triggers the file input
     $dropZone.on('click', function (e) {
@@ -423,10 +423,10 @@
     // Drag-over highlight
     $dropZone.on('dragover dragenter', function (e) {
         e.preventDefault();
-        $dropZone.addClass('lumo-file-drop--over');
+        $dropZone.addClass('lumos-file-drop--over');
     });
     $dropZone.on('dragleave drop', function () {
-        $dropZone.removeClass('lumo-file-drop--over');
+        $dropZone.removeClass('lumos-file-drop--over');
     });
 
     // File dropped
@@ -443,24 +443,24 @@
 
     function readJsonFile(file) {
         if (!file.name.match(/\.json$/i) && file.type !== 'application/json') {
-            $('#lumo-import-feedback').html(
-                '<div class="lumo-feedback-error">✕ Please select a .json file.</div>'
+            $('#lumos-import-feedback').html(
+                '<div class="lumos-feedback-error">✕ Please select a .json file.</div>'
             );
             return;
         }
         var reader = new FileReader();
         reader.onload = function (e) {
-            $('#lumo-import-json').val(e.target.result).trigger('input');
-            $('#lumo-file-name').text('✓ ' + file.name);
+            $('#lumos-import-json').val(e.target.result).trigger('input');
+            $('#lumos-file-name').text('✓ ' + file.name);
         };
         reader.readAsText(file);
     }
 
     // Reset state when textarea changes
-    $('#lumo-import-json').on('input', function () {
+    $('#lumos-import-json').on('input', function () {
         parsedImport = null;
-        $('#lumo-validate-import').text('Validate & Preview').css('background', '');
-        $('#lumo-import-feedback, #lumo-import-advisory').html('');
+        $('#lumos-validate-import').text('Validate & Preview').css('background', '');
+        $('#lumos-import-feedback, #lumos-import-advisory').html('');
     });
 
     function validateJson(raw) {
@@ -516,14 +516,14 @@
         }
 
         // Switch to the SEO tab to show filled fields
-        $('.lumo-mb-tab[data-tab="seo"]').trigger('click');
+        $('.lumos-mb-tab[data-tab="seo"]').trigger('click');
 
         // Flash highlight on filled inputs
         Object.keys(parsed.result).forEach(function (k) {
             var sel = FIELD_MAP[k];
             if (sel) {
-                $(sel).addClass('lumo-flash');
-                setTimeout(function () { $(sel).removeClass('lumo-flash'); }, 1500);
+                $(sel).addClass('lumos-flash');
+                setTimeout(function () { $(sel).removeClass('lumos-flash'); }, 1500);
             }
         });
 

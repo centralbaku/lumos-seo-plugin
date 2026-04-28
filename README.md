@@ -1,4 +1,4 @@
-# Lumo SEO
+# Lumos SEO
 
 A lightweight but powerful WordPress SEO plugin — on-page analysis, meta management, Open Graph / Twitter Cards, AI JSON import, and more.
 

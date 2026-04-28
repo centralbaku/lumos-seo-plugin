@@ -1,7 +1,7 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-class Lumo_SEO_Front_End {
+class Lumos_SEO_Front_End {
 
     public function __construct() {
         remove_action( 'wp_head', 'wp_generator' );
@@ -18,10 +18,10 @@ class Lumo_SEO_Front_End {
     public function filter_document_title( $title ) {
         if ( ! is_singular() ) return $title;
         $post_id    = get_queried_object_id();
-        $meta_title = get_post_meta( $post_id, '_lumo_meta_title', true );
+        $meta_title = get_post_meta( $post_id, '_lumos_meta_title', true );
         if ( $meta_title ) return $meta_title;
-        $sep  = get_option( 'lumo_seo_separator', '|' );
-        $site = get_option( 'lumo_seo_site_name', get_bloginfo( 'name' ) );
+        $sep  = get_option( 'lumos_seo_separator', '|' );
+        $site = get_option( 'lumos_seo_site_name', get_bloginfo( 'name' ) );
         return get_the_title( $post_id ) . ' ' . $sep . ' ' . $site;
     }
 
@@ -29,8 +29,8 @@ class Lumo_SEO_Front_End {
     public function output_meta() {
         if ( ! is_singular() ) return;
         $id   = get_queried_object_id();
-        $desc = get_post_meta( $id, '_lumo_meta_description', true );
-        $kw   = get_post_meta( $id, '_lumo_focus_keyword', true );
+        $desc = get_post_meta( $id, '_lumos_meta_description', true );
+        $kw   = get_post_meta( $id, '_lumos_focus_keyword', true );
         if ( $desc ) echo '<meta name="description" content="' . esc_attr( $desc ) . '">' . "\n";
         if ( $kw )   echo '<meta name="keywords" content="' . esc_attr( $kw ) . '">' . "\n";
     }
@@ -43,39 +43,39 @@ class Lumo_SEO_Front_End {
 
         // Resolve each field with smart fallback chain
         $og_title = $this->first(
-            get_post_meta( $id, '_lumo_og_title', true ),
-            get_post_meta( $id, '_lumo_meta_title', true ),
+            get_post_meta( $id, '_lumos_og_title', true ),
+            get_post_meta( $id, '_lumos_meta_title', true ),
             get_the_title( $id )
         );
         $og_desc  = $this->first(
-            get_post_meta( $id, '_lumo_og_description', true ),
-            get_post_meta( $id, '_lumo_meta_description', true )
+            get_post_meta( $id, '_lumos_og_description', true ),
+            get_post_meta( $id, '_lumos_meta_description', true )
         );
         $og_url   = $this->first(
-            get_post_meta( $id, '_lumo_og_url', true ),
+            get_post_meta( $id, '_lumos_og_url', true ),
             get_permalink( $id )
         );
         $og_type  = $this->first(
-            get_post_meta( $id, '_lumo_og_type', true ),
+            get_post_meta( $id, '_lumos_og_type', true ),
             ( $post->post_type === 'post' ? 'article' : 'website' )
         );
         $og_site  = $this->first(
-            get_post_meta( $id, '_lumo_og_site_name', true ),
-            get_option( 'lumo_seo_site_name', get_bloginfo( 'name' ) )
+            get_post_meta( $id, '_lumos_og_site_name', true ),
+            get_option( 'lumos_seo_site_name', get_bloginfo( 'name' ) )
         );
         $og_locale = $this->first(
-            get_post_meta( $id, '_lumo_og_locale', true ),
+            get_post_meta( $id, '_lumos_og_locale', true ),
             'en_US'
         );
 
         // Image: custom og_image → featured image → global default
-        $og_image = get_post_meta( $id, '_lumo_og_image', true );
+        $og_image = get_post_meta( $id, '_lumos_og_image', true );
         if ( ! $og_image ) {
             $thumb_id = get_post_thumbnail_id( $id );
             if ( $thumb_id ) $og_image = wp_get_attachment_image_url( $thumb_id, 'large' );
         }
         if ( ! $og_image ) {
-            $default_id = get_option( 'lumo_seo_default_og_image' );
+            $default_id = get_option( 'lumos_seo_default_og_image' );
             if ( $default_id ) $og_image = wp_get_attachment_image_url( $default_id, 'large' );
         }
 
@@ -131,21 +131,21 @@ class Lumo_SEO_Front_End {
         if ( ! is_singular() ) return;
         $id = get_queried_object_id();
 
-        $card  = $this->first( get_post_meta( $id, '_lumo_twitter_card', true ), 'summary_large_image' );
+        $card  = $this->first( get_post_meta( $id, '_lumos_twitter_card', true ), 'summary_large_image' );
         $title = $this->first(
-            get_post_meta( $id, '_lumo_twitter_title', true ),
-            get_post_meta( $id, '_lumo_og_title', true ),
-            get_post_meta( $id, '_lumo_meta_title', true ),
+            get_post_meta( $id, '_lumos_twitter_title', true ),
+            get_post_meta( $id, '_lumos_og_title', true ),
+            get_post_meta( $id, '_lumos_meta_title', true ),
             get_the_title( $id )
         );
         $desc  = $this->first(
-            get_post_meta( $id, '_lumo_twitter_description', true ),
-            get_post_meta( $id, '_lumo_og_description', true ),
-            get_post_meta( $id, '_lumo_meta_description', true )
+            get_post_meta( $id, '_lumos_twitter_description', true ),
+            get_post_meta( $id, '_lumos_og_description', true ),
+            get_post_meta( $id, '_lumos_meta_description', true )
         );
         $image = $this->first(
-            get_post_meta( $id, '_lumo_twitter_image', true ),
-            get_post_meta( $id, '_lumo_og_image', true )
+            get_post_meta( $id, '_lumos_twitter_image', true ),
+            get_post_meta( $id, '_lumos_og_image', true )
         );
         if ( ! $image ) {
             $thumb = get_post_thumbnail_id( $id );
@@ -163,11 +163,11 @@ class Lumo_SEO_Front_End {
         $directives = [];
         if ( is_singular() ) {
             $id = get_queried_object_id();
-            if ( get_post_meta( $id, '_lumo_noindex', true ) ) {
+            if ( get_post_meta( $id, '_lumos_noindex', true ) ) {
                 $directives = [ 'noindex', 'nofollow' ];
             }
         }
-        if ( get_option( 'lumo_seo_noindex_archives' ) && ( is_category() || is_tag() || is_author() || is_date() ) ) {
+        if ( get_option( 'lumos_seo_noindex_archives' ) && ( is_category() || is_tag() || is_author() || is_date() ) ) {
             $directives = [ 'noindex', 'follow' ];
         }
         if ( $directives ) {
@@ -179,13 +179,13 @@ class Lumo_SEO_Front_End {
     public function output_canonical() {
         if ( ! is_singular() ) return;
         $id  = get_queried_object_id();
-        $url = get_post_meta( $id, '_lumo_canonical', true ) ?: get_permalink( $id );
+        $url = get_post_meta( $id, '_lumos_canonical', true ) ?: get_permalink( $id );
         echo '<link rel="canonical" href="' . esc_url( $url ) . '">' . "\n";
     }
 
     // ── Google verification ────────────────────────────────────────────────
     public function output_verification() {
-        $code = get_option( 'lumo_seo_google_site_verification' );
+        $code = get_option( 'lumos_seo_google_site_verification' );
         if ( $code ) echo '<meta name="google-site-verification" content="' . esc_attr( $code ) . '">' . "\n";
     }
 

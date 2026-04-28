@@ -1,4 +1,4 @@
-/* Lumo SEO — Gutenberg Sidebar */
+/* Lumos SEO — Gutenberg Sidebar */
 (function ($) {
     'use strict';
 
@@ -58,7 +58,7 @@
     function Dot( { status } ) {
         const colors = { good: '#46b450', ok: '#ffb900', bad: '#dc3232' };
         return el( 'span', {
-            className: 'lumo-dot lumo-dot--' + status,
+            className: 'lumos-dot lumos-dot--' + status,
             style: {
                 display: 'inline-block',
                 width: 10, height: 10,
@@ -85,7 +85,7 @@
 
     // ── Single check row ─────────────────────────────────────────────────
     function CheckRow( { check } ) {
-        return el( 'div', { className: 'lumo-check-row', style: { display: 'flex', gap: 8, padding: '7px 0', borderBottom: '1px solid #f0f0f0', alignItems: 'flex-start', lineHeight: 1.45, fontSize: 13 } },
+        return el( 'div', { className: 'lumos-check-row', style: { display: 'flex', gap: 8, padding: '7px 0', borderBottom: '1px solid #f0f0f0', alignItems: 'flex-start', lineHeight: 1.45, fontSize: 13 } },
             el( Dot, { status: check.status } ),
             el( 'span', { style: { flex: 1 }, dangerouslySetInnerHTML: { __html: check.message } } ),
             el( PriorityBadge, { priority: check.priority } )
@@ -99,7 +99,7 @@
         return el( PanelBody, {
             title: title + ' (' + sorted.length + ')',
             initialOpen: defaultOpen,
-            className: 'lumo-check-group',
+            className: 'lumos-check-group',
         },
             sorted.map( c => el( CheckRow, { key: c.id, check: c } ) )
         );
@@ -126,7 +126,7 @@
     // ── Snippet preview ──────────────────────────────────────────────────
     function SnippetPreview( { title, url, desc } ) {
         return el( 'div', {
-            className: 'lumo-snippet',
+            className: 'lumos-snippet',
             style: {
                 border: '1px solid #ddd', borderRadius: 8, padding: '12px 14px',
                 background: '#fff', fontFamily: 'Arial, sans-serif', marginBottom: 12,
@@ -237,7 +237,7 @@
         const [ copied,   setCopied   ] = useState( false );
 
         const copyExample = () => {
-            navigator.clipboard?.writeText( lumoSEO.exampleJson || '' )
+            navigator.clipboard?.writeText( lumosSEO.exampleJson || '' )
                 .then( () => { setCopied( true ); setTimeout( () => setCopied( false ), 2000 ); } );
         };
 
@@ -379,9 +379,9 @@
             if ( ! postId ) return;
             setLoading( true );
             setError( null );
-            $.post( lumoSEO.ajaxurl, {
-                action:           'lumo_seo_analyze',
-                nonce:            lumoSEO.nonce,
+            $.post( lumosSEO.ajaxurl, {
+                action:           'lumos_seo_analyze',
+                nonce:            lumosSEO.nonce,
                 post_id:          postId,
                 focus_keyword:    focusKw,
                 meta_title:       metaTitle || postTitle,
@@ -421,7 +421,7 @@
         const readG = group( analysis && analysis.read );
 
         const previewTitle = metaTitle || postTitle;
-        const previewUrl   = postLink || ( lumoSEO.siteUrl + '/' );
+        const previewUrl   = postLink || ( lumosSEO.siteUrl + '/' );
 
         // ── Apply imported data ───────────────────────────────────────────
         const handleImportApply = useCallback( ( { result } ) => {
@@ -435,7 +435,7 @@
         }, [ editPost, meta, analyze ] );
 
         // ── Render ────────────────────────────────────────────────────────
-        return el( 'div', { className: 'lumo-sidebar' },
+        return el( 'div', { className: 'lumos-sidebar' },
 
             // AI Import Modal (rendered outside sidebar panels so it overlays everything)
             showImport && el( ImportModal, {
@@ -460,7 +460,7 @@
             ),
 
             // ── Focus keyphrase ───────────────────────────────────────────
-            el( PanelBody, { title: 'Focus keyphrase', initialOpen: true, className: 'lumo-panel' },
+            el( PanelBody, { title: 'Focus keyphrase', initialOpen: true, className: 'lumos-panel' },
                 el( TextControl, {
                     label:       '',
                     value:       focusKw,
@@ -483,7 +483,7 @@
             el( PanelBody, {
                 title:       el( SectionTitle, { label: 'SEO analysis', score: analysis ? analysis.seo_score : null } ),
                 initialOpen: true,
-                className:   'lumo-panel',
+                className:   'lumos-panel',
             },
                 ! analysis && ! loading && el( 'p', { style: { color: '#999', fontSize: 13, fontStyle: 'italic', margin: 0 } },
                     'Set a focus keyphrase above and click Analyze to start.'
@@ -500,7 +500,7 @@
             el( PanelBody, {
                 title:       el( SectionTitle, { label: 'Readability analysis', score: analysis ? analysis.read_score : null } ),
                 initialOpen: false,
-                className:   'lumo-panel',
+                className:   'lumos-panel',
             },
                 ! analysis && ! loading && el( 'p', { style: { color: '#999', fontSize: 13, fontStyle: 'italic', margin: 0 } },
                     'Run analysis to see readability feedback.'
@@ -514,7 +514,7 @@
             ),
 
             // ── Snippet preview ───────────────────────────────────────────
-            el( PanelBody, { title: 'Snippet preview', initialOpen: false, className: 'lumo-panel' },
+            el( PanelBody, { title: 'Snippet preview', initialOpen: false, className: 'lumos-panel' },
                 el( SnippetPreview, { title: previewTitle, url: previewUrl, desc: metaDesc } ),
 
                 el( TextControl, {
@@ -541,7 +541,7 @@
             ),
 
             // ── Open Graph ────────────────────────────────────────────────
-            el( PanelBody, { title: 'Open Graph (Facebook · LinkedIn · WhatsApp)', initialOpen: false, className: 'lumo-panel' },
+            el( PanelBody, { title: 'Open Graph (Facebook · LinkedIn · WhatsApp)', initialOpen: false, className: 'lumos-panel' },
                 el( 'p', { style: { fontSize: 11, color: '#999', margin: '0 0 10px', lineHeight: 1.5 } },
                     'Controls how your page appears when shared on social platforms.'
                 ),
@@ -567,12 +567,12 @@
                 ),
                 el( 'div', { style: { height: 10 } } ),
                 el( TextControl, { label: 'og:site_name', value: ogSite,
-                    placeholder: lumoSEO.siteName || 'Your Brand',
+                    placeholder: lumosSEO.siteName || 'Your Brand',
                     onChange: v => setMeta( '_lumo_og_site_name', v ), __nextHasNoMarginBottom: true } )
             ),
 
             // ── Twitter / X ───────────────────────────────────────────────
-            el( PanelBody, { title: 'Twitter / X', initialOpen: false, className: 'lumo-panel' },
+            el( PanelBody, { title: 'Twitter / X', initialOpen: false, className: 'lumos-panel' },
                 el( 'p', { style: { fontSize: 11, color: '#999', margin: '0 0 10px', lineHeight: 1.5 } },
                     'Leave blank to fall back to Open Graph values.'
                 ),
@@ -601,7 +601,7 @@
             ),
 
             // ── Advanced ──────────────────────────────────────────────────
-            el( PanelBody, { title: 'Advanced', initialOpen: false, className: 'lumo-panel' },
+            el( PanelBody, { title: 'Advanced', initialOpen: false, className: 'lumos-panel' },
                 el( TextControl, { label: 'Canonical URL', value: meta._lumo_canonical || '', placeholder: previewUrl || 'Defaults to page URL',
                     onChange: v => setMeta( '_lumo_canonical', v ), __nextHasNoMarginBottom: true,
                     help: 'Leave blank to use the page URL.' } ),
@@ -622,12 +622,12 @@
     }
 
     // ── Register plugin ───────────────────────────────────────────────────
-    registerPlugin( 'lumo-seo', {
+    registerPlugin( 'lumos-seo', {
         icon: 'chart-line',
         render: function () {
             return el( Fragment, null,
-                el( PluginSidebarMoreMenuItem, { target: 'lumo-seo-sidebar', icon: 'chart-line' }, 'Lumo SEO' ),
-                el( PluginSidebar, { name: 'lumo-seo-sidebar', title: 'Lumo SEO', icon: 'chart-line' },
+                el( PluginSidebarMoreMenuItem, { target: 'lumos-seo-sidebar', icon: 'chart-line' }, 'Lumos SEO' ),
+                el( PluginSidebar, { name: 'lumos-seo-sidebar', title: 'Lumos SEO', icon: 'chart-line' },
                     el( LumoSidebar )
                 )
             );

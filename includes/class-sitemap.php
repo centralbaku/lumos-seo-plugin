@@ -1,7 +1,7 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-class Lumo_SEO_Sitemap {
+class Lumos_SEO_Sitemap {
 
     public function __construct() {
         add_action( 'init',           [ $this, 'add_rewrite' ] );
@@ -34,7 +34,7 @@ class Lumo_SEO_Sitemap {
             'posts_per_page' => 1000,
             'meta_query'     => [
                 [
-                    'key'     => '_lumo_noindex',
+                    'key'     => '_lumos_noindex',
                     'compare' => 'NOT EXISTS',
                 ],
             ],
