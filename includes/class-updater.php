@@ -8,6 +8,7 @@ class Lumos_SEO_Updater {
     private $plugin_folder; // folder only
     private $version;
     private $repo      = 'centralbaku/lumos-seo-plugin';
+    private $branch    = 'main';
     private $cache_key = 'lumos_seo_update_info';
     private $cache_ttl;
 
@@ -40,12 +41,12 @@ class Lumos_SEO_Updater {
         exit;
     }
 
-    // ── Fetch latest GitHub release ───────────────────────────────────────────
-    private function fetch_release() {
+    // ── Fetch update payload (release -> tag -> branch head) ──────────────────
+    private function fetch_update_payload() {
         $cached = get_transient( $this->cache_key );
         if ( $cached !== false ) return $cached ? $cached : null;
 
-        $response = wp_remote_get(
+        $release_response = wp_remote_get(
             'https://api.github.com/repos/' . $this->repo . '/releases/latest',
             array(
                 'timeout' => 15,
@@ -56,26 +57,80 @@ class Lumos_SEO_Updater {
             )
         );
 
-        $code = wp_remote_retrieve_response_code( $response );
+        $payload = null;
+        $release_code = wp_remote_retrieve_response_code( $release_response );
+        if ( ! is_wp_error( $release_response ) && $release_code === 200 ) {
+            $release = json_decode( wp_remote_retrieve_body( $release_response ) );
+            if ( ! empty( $release->tag_name ) ) {
+                $payload = (object) array(
+                    'version'      => ltrim( $release->tag_name, 'v' ),
+                    'package'      => isset( $release->zipball_url ) ? $release->zipball_url : '',
+                    'changelog'    => isset( $release->body ) ? $release->body : 'See GitHub for release notes.',
+                    'last_updated' => isset( $release->published_at ) ? $release->published_at : '',
+                );
+            }
+        }
 
-        if ( is_wp_error( $response ) || $code !== 200 ) {
+        if ( ! $payload ) {
+            $tags_response = wp_remote_get(
+                'https://api.github.com/repos/' . $this->repo . '/tags?per_page=1',
+                array(
+                    'timeout' => 15,
+                    'headers' => array(
+                        'Accept'     => 'application/vnd.github+json',
+                        'User-Agent' => 'WordPress/' . get_bloginfo( 'version' ) . '; ' . home_url(),
+                    ),
+                )
+            );
+            $tags_code = wp_remote_retrieve_response_code( $tags_response );
+            if ( ! is_wp_error( $tags_response ) && $tags_code === 200 ) {
+                $tags = json_decode( wp_remote_retrieve_body( $tags_response ) );
+                if ( is_array( $tags ) && ! empty( $tags[0]->name ) ) {
+                    $tag_name = ltrim( $tags[0]->name, 'v' );
+                    $payload  = (object) array(
+                        'version'      => $tag_name,
+                        'package'      => 'https://api.github.com/repos/' . $this->repo . '/zipball/refs/tags/' . rawurlencode( $tags[0]->name ),
+                        'changelog'    => 'Latest git tag: ' . $tags[0]->name,
+                        'last_updated' => '',
+                    );
+                }
+            }
+        }
+
+        if ( ! $payload ) {
+            $commit_response = wp_remote_get(
+                'https://api.github.com/repos/' . $this->repo . '/commits/' . $this->branch,
+                array(
+                    'timeout' => 15,
+                    'headers' => array(
+                        'Accept'     => 'application/vnd.github+json',
+                        'User-Agent' => 'WordPress/' . get_bloginfo( 'version' ) . '; ' . home_url(),
+                    ),
+                )
+            );
+            $commit_code = wp_remote_retrieve_response_code( $commit_response );
+            if ( ! is_wp_error( $commit_response ) && $commit_code === 200 ) {
+                $commit = json_decode( wp_remote_retrieve_body( $commit_response ) );
+                $date   = isset( $commit->commit->committer->date ) ? strtotime( $commit->commit->committer->date ) : time();
+                $stamp  = gmdate( 'YmdHis', $date );
+                $sha    = isset( $commit->sha ) ? substr( $commit->sha, 0, 7 ) : '';
+                $msg    = isset( $commit->commit->message ) ? trim( $commit->commit->message ) : '';
+                $payload = (object) array(
+                    'version'      => $this->version . '.' . $stamp,
+                    'package'      => 'https://api.github.com/repos/' . $this->repo . '/zipball/' . $this->branch,
+                    'changelog'    => 'Latest commit (' . $sha . '): ' . $msg,
+                    'last_updated' => isset( $commit->commit->committer->date ) ? $commit->commit->committer->date : '',
+                );
+            }
+        }
+
+        if ( ! $payload ) {
             set_transient( $this->cache_key, false, HOUR_IN_SECONDS );
             return null;
         }
 
-        $release = json_decode( wp_remote_retrieve_body( $response ) );
-
-        if ( empty( $release->tag_name ) ) {
-            set_transient( $this->cache_key, false, HOUR_IN_SECONDS );
-            return null;
-        }
-
-        set_transient( $this->cache_key, $release, $this->cache_ttl );
-        return $release;
-    }
-
-    private function remote_version( $release ) {
-        return ltrim( $release->tag_name, 'v' );
+        set_transient( $this->cache_key, $payload, $this->cache_ttl );
+        return $payload;
     }
 
     // ── Inject update into WP transient ──────────────────────────────────────
@@ -83,10 +138,10 @@ class Lumos_SEO_Updater {
         if ( ! is_object( $transient ) ) return $transient;
         if ( empty( $transient->checked ) ) return $transient;
 
-        $release = $this->fetch_release();
-        if ( ! $release ) return $transient;
+        $payload = $this->fetch_update_payload();
+        if ( ! $payload || empty( $payload->version ) || empty( $payload->package ) ) return $transient;
 
-        $remote = $this->remote_version( $release );
+        $remote = $payload->version;
 
         if ( version_compare( $this->version, $remote, '<' ) ) {
             $transient->response[ $this->plugin_slug ] = (object) array(
@@ -95,7 +150,7 @@ class Lumos_SEO_Updater {
                 'plugin'       => $this->plugin_slug,
                 'new_version'  => $remote,
                 'url'          => 'https://github.com/' . $this->repo,
-                'package'      => $release->zipball_url,
+                'package'      => $payload->package,
                 'icons'        => array(),
                 'banners'      => array(),
                 'tested'       => '6.8',
@@ -121,23 +176,23 @@ class Lumos_SEO_Updater {
         if ( ! is_object( $args ) ) return $result;
         if ( empty( $args->slug ) || $args->slug !== $this->plugin_folder ) return $result;
 
-        $release = $this->fetch_release();
-        if ( ! $release ) return $result;
+        $payload = $this->fetch_update_payload();
+        if ( ! $payload ) return $result;
 
-        $changelog = nl2br( esc_html( isset( $release->body ) ? $release->body : 'See GitHub for release notes.' ) );
+        $changelog = nl2br( esc_html( isset( $payload->changelog ) ? $payload->changelog : 'See GitHub for release notes.' ) );
 
         return (object) array(
             'name'              => 'Lumos SEO',
             'slug'              => $this->plugin_folder,
-            'version'           => $this->remote_version( $release ),
+            'version'           => isset( $payload->version ) ? $payload->version : $this->version,
             'author'            => '<a href="https://github.com/centralbaku">Orkhan Hasanov</a>',
             'author_profile'    => 'https://github.com/centralbaku',
             'homepage'          => 'https://github.com/' . $this->repo,
             'requires'          => '6.0',
             'tested'            => '6.8',
             'requires_php'      => '7.2',
-            'last_updated'      => isset( $release->published_at ) ? $release->published_at : '',
-            'download_link'     => $release->zipball_url,
+            'last_updated'      => isset( $payload->last_updated ) ? $payload->last_updated : '',
+            'download_link'     => isset( $payload->package ) ? $payload->package : '',
             'short_description' => 'On-page SEO analysis, OG/Twitter meta, AI JSON import, Gutenberg sidebar.',
             'sections'          => array(
                 'description' => '<p>Lumos SEO — lightweight WordPress SEO plugin with on-page analysis, Open Graph / Twitter Cards, AI JSON import, and XML sitemap.</p>',
