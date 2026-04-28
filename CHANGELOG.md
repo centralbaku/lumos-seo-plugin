@@ -6,6 +6,13 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.9.2] — 2026-04-28
+
+### Fixed
+- **Critical error on "Check for updates" click** — force-check handler moved from class constructor to `admin_init` hook so WordPress is fully loaded before redirecting. Removed PHP 8-style `object` type hints from filter callbacks (`inject_update`, `plugin_info`, `fix_folder`) and replaced with defensive `is_object()` guards, preventing TypeErrors when WordPress passes unexpected values through filters. Switched `wp_redirect` → `wp_safe_redirect`.
+
+---
+
 ## [1.9.1] — 2026-04-28
 
 ### Fixed
