@@ -64,7 +64,7 @@ See [CHANGELOG.md](CHANGELOG.md)
 
 ## Author
 
-**Orkhan Hasanov**
+**[Orkhan Hasanov (centralbaku)](https://github.com/centralbaku)**
 
 ## License
 
