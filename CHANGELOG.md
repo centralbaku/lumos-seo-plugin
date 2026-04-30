@@ -6,6 +6,23 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.10.8] — 2026-04-30
+
+### Added
+- **Optional Service Schema tab** in editor UI — per-page toggle to enable/disable Service JSON-LD output.
+- **Service schema JSON field + GPT helper** — paste schema JSON-LD directly and copy a prompt for improving reliability in GPT.
+- **Service schema import support** — JSON import now accepts `use_service_schema` and `service_schema` fields (object or JSON string).
+- **Service schema analysis checks** — validates enable state, JSON syntax, `@type=Service`, and key recommended fields inside SEO analysis output.
+
+### Changed
+- **Frontend schema output** — page now outputs Service JSON-LD only when enabled and valid, reducing malformed schema risk.
+- **Gutenberg + classic parity** — Service schema controls and analysis request fields are wired in both editors.
+
+### Fixed
+- **Admin CSS animation declaration** — corrected flash animation to proper `@keyframes` syntax.
+
+---
+
 ## [1.10.7] — 2026-04-28
 
 ### Changed
