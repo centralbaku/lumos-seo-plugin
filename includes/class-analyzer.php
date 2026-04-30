@@ -30,6 +30,7 @@ class Lumos_SEO_Analyzer {
         $meta_desc  = $args['meta_description'] ?? get_post_meta( $post_id, '_lumos_meta_description', true );
         $schema_enabled = $args['service_schema_enabled'] ?? get_post_meta( $post_id, '_lumos_service_schema_enabled', true );
         $schema_json    = $args['service_schema_json']    ?? get_post_meta( $post_id, '_lumos_service_schema_json', true );
+        $content_for_links = $this->content_for_link_checks( $content );
         $plain      = wp_strip_all_tags( $content );
 
         $seo_checks  = [];
@@ -45,7 +46,7 @@ class Lumos_SEO_Analyzer {
             $seo_checks[] = $this->check_kw_density( $focus_kw, $plain );
             $seo_checks[] = $this->check_kw_in_image_alt( $focus_kw, $content );
             $seo_checks[] = $this->check_previously_used_kw( $focus_kw, $post_id );
-            $seo_checks[] = $this->check_competing_links( $focus_kw, $content );
+            $seo_checks[] = $this->check_competing_links( $focus_kw, $content_for_links );
         } else {
             $seo_checks[] = $this->make( 'kw_length',    'bad', self::HIGH,   'Keyphrase length: No focus keyphrase set. Add one to calculate your SEO score.' );
             $seo_checks[] = $this->make( 'kw_in_title',  'bad', self::HIGH,   'Keyphrase in SEO title: Please add a keyphrase and an SEO title beginning with it.' );
@@ -60,8 +61,8 @@ class Lumos_SEO_Analyzer {
         $seo_checks[] = $this->check_content_length( $plain );
         $seo_checks[] = $this->check_meta_title_length( $meta_title );
         $seo_checks[] = $this->check_meta_desc_length( $meta_desc );
-        $seo_checks[] = $this->check_internal_links( $content );
-        $seo_checks[] = $this->check_outbound_links( $content );
+        $seo_checks[] = $this->check_internal_links( $content_for_links );
+        $seo_checks[] = $this->check_outbound_links( $content_for_links );
         $seo_checks[] = $this->check_images( $content );
         $seo_checks[] = $this->check_single_h1( $content );
         $seo_checks[] = $this->check_service_schema_enabled( $schema_enabled );
@@ -119,6 +120,23 @@ class Lumos_SEO_Analyzer {
             }
         }
         return $html;
+    }
+
+    /**
+     * Use rendered content for link checks so filter-injected links
+     * (e.g. auto internal-link plugins) are reflected in SEO analysis.
+     */
+    private function content_for_link_checks( $content ) {
+        if ( ! is_string( $content ) ) {
+            return '';
+        }
+
+        $rendered = apply_filters( 'the_content', $content );
+        if ( ! is_string( $rendered ) || $rendered === '' ) {
+            return $content;
+        }
+
+        return $rendered;
     }
 
     // ── SEO checks ─────────────────────────────────────────────────────────

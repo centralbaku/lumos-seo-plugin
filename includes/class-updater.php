@@ -41,10 +41,13 @@ class Lumos_SEO_Updater {
         exit;
     }
 
-    // ── Fetch update payload (release -> tag -> branch head) ──────────────────
+    // ── Fetch update payload (newest of release/tag -> branch head) ───────────
     private function fetch_update_payload() {
         $cached = get_transient( $this->cache_key );
         if ( $cached !== false ) return $cached ? $cached : null;
+
+        $release_payload = null;
+        $tag_payload     = null;
 
         $release_response = wp_remote_get(
             'https://api.github.com/repos/' . $this->repo . '/releases/latest',
@@ -62,7 +65,7 @@ class Lumos_SEO_Updater {
         if ( ! is_wp_error( $release_response ) && $release_code === 200 ) {
             $release = json_decode( wp_remote_retrieve_body( $release_response ) );
             if ( ! empty( $release->tag_name ) ) {
-                $payload = (object) array(
+                $release_payload = (object) array(
                     'version'      => ltrim( $release->tag_name, 'v' ),
                     'package'      => isset( $release->zipball_url ) ? $release->zipball_url : '',
                     'changelog'    => isset( $release->body ) ? $release->body : 'See GitHub for release notes.',
@@ -71,30 +74,39 @@ class Lumos_SEO_Updater {
             }
         }
 
-        if ( ! $payload ) {
-            $tags_response = wp_remote_get(
-                'https://api.github.com/repos/' . $this->repo . '/tags?per_page=1',
-                array(
-                    'timeout' => 15,
-                    'headers' => array(
-                        'Accept'     => 'application/vnd.github+json',
-                        'User-Agent' => 'WordPress/' . get_bloginfo( 'version' ) . '; ' . home_url(),
-                    ),
-                )
-            );
-            $tags_code = wp_remote_retrieve_response_code( $tags_response );
-            if ( ! is_wp_error( $tags_response ) && $tags_code === 200 ) {
-                $tags = json_decode( wp_remote_retrieve_body( $tags_response ) );
-                if ( is_array( $tags ) && ! empty( $tags[0]->name ) ) {
-                    $tag_name = ltrim( $tags[0]->name, 'v' );
-                    $payload  = (object) array(
-                        'version'      => $tag_name,
-                        'package'      => 'https://api.github.com/repos/' . $this->repo . '/zipball/refs/tags/' . rawurlencode( $tags[0]->name ),
-                        'changelog'    => 'Latest git tag: ' . $tags[0]->name,
-                        'last_updated' => '',
-                    );
-                }
+        $tags_response = wp_remote_get(
+            'https://api.github.com/repos/' . $this->repo . '/tags?per_page=1',
+            array(
+                'timeout' => 15,
+                'headers' => array(
+                    'Accept'     => 'application/vnd.github+json',
+                    'User-Agent' => 'WordPress/' . get_bloginfo( 'version' ) . '; ' . home_url(),
+                ),
+            )
+        );
+        $tags_code = wp_remote_retrieve_response_code( $tags_response );
+        if ( ! is_wp_error( $tags_response ) && $tags_code === 200 ) {
+            $tags = json_decode( wp_remote_retrieve_body( $tags_response ) );
+            if ( is_array( $tags ) && ! empty( $tags[0]->name ) ) {
+                $tag_name    = ltrim( $tags[0]->name, 'v' );
+                $tag_payload = (object) array(
+                    'version'      => $tag_name,
+                    'package'      => 'https://api.github.com/repos/' . $this->repo . '/zipball/refs/tags/' . rawurlencode( $tags[0]->name ),
+                    'changelog'    => 'Latest git tag: ' . $tags[0]->name,
+                    'last_updated' => '',
+                );
             }
+        }
+
+        // Choose whichever semantic version is newer between latest release and latest tag.
+        if ( $release_payload && $tag_payload ) {
+            $payload = version_compare( $release_payload->version, $tag_payload->version, '>=' )
+                ? $release_payload
+                : $tag_payload;
+        } elseif ( $release_payload ) {
+            $payload = $release_payload;
+        } elseif ( $tag_payload ) {
+            $payload = $tag_payload;
         }
 
         if ( ! $payload ) {

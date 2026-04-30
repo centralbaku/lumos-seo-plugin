@@ -6,6 +6,16 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.10.9] — 2026-04-30
+
+### Fixed
+- **Updater version source selection** — updater now fetches both latest GitHub release and latest tag, then chooses the newer semantic version so WordPress update checks do not get stuck on an older release.
+
+### Changed
+- **Link-related SEO scoring** — internal links, outbound links, and competing links checks now analyze filtered/rendered content (`the_content`) so links injected by keyword-linking plugins are counted in SEO analysis.
+
+---
+
 ## [1.10.8] — 2026-04-30
 
 ### Added
