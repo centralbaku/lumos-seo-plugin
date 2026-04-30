@@ -6,6 +6,17 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.10.11] — 2026-04-30
+
+### Added
+- **Service Schema tab Update Analysis button** — users can now trigger schema validation directly from the Service Schema tab without switching back to the SEO tab.
+- **Schema analysis placeholder** — the Service Schema panel now shows a clear prompt before first analysis run.
+
+### Changed
+- **Classic editor analysis flow** — SEO and schema-tab analysis now use a shared analyzer request function for consistent live results.
+
+---
+
 ## [1.10.10] — 2026-04-30
 
 ### Fixed

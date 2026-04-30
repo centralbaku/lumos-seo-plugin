@@ -325,6 +325,10 @@ $noindex    = $f['_lumos_noindex'];
                           class="lumos-textarea lumos-code-textarea"
                           placeholder='{"@context":"https://schema.org","@type":"Service","name":"..."}'><?php echo esc_textarea( $f['_lumos_service_schema_json'] ); ?></textarea>
                 <p class="lumos-hint">Paste JSON only (without &lt;script&gt; tag). You can also import it from a .json file in the Import modal.</p>
+                <div class="lumos-analyze-row">
+                    <button type="button" id="lumos-update-schema-analysis" class="lumos-btn-primary">Update Analysis</button>
+                    <span id="lumos-schema-analyzing" style="display:none;color:#999;font-size:12px">Analyzing…</span>
+                </div>
             </div>
         </div>
 

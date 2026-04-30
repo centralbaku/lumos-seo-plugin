@@ -3,7 +3,7 @@
  * Plugin Name: Lumos SEO
  * Plugin URI:  https://lumosseo.com
  * Description: On-page SEO analysis for WordPress — keyword optimization, readability scoring, snippet preview, and meta management.
- * Version:     1.10.10
+ * Version:     1.10.11
  * Author:      Orkhan Hasanov
  * License:     GPL-2.0+
  * Text Domain: lumos-seo
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'LUMOS_SEO_VERSION', '1.10.10' );
+define( 'LUMOS_SEO_VERSION', '1.10.11' );
 define( 'LUMOS_SEO_DIR', plugin_dir_path( __FILE__ ) );
 define( 'LUMOS_SEO_URL', plugin_dir_url( __FILE__ ) );
 

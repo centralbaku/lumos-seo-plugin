@@ -139,12 +139,9 @@
     }
     $('#lm_twitter_title, #lm_twitter_description, #lm_twitter_image').on('input', updateTWCard);
 
-    // ── SEO Analysis ──────────────────────────────────────────────────────
-    $('#lumos-analyze-btn').on('click', function () {
-        var $btn = $(this);
-        $btn.prop('disabled', true);
-        $('#lumos-analyzing').show();
-
+    function runAnalysis($button, loadingSelector) {
+        $button.prop('disabled', true);
+        $(loadingSelector).show();
         var content = '';
         if (window.wp && wp.data && wp.data.select('core/editor')) {
             content = wp.data.select('core/editor').getEditedPostContent() || '';
@@ -169,9 +166,19 @@
             if (res.success) renderResults(res.data);
         })
         .always(function () {
-            $btn.prop('disabled', false);
-            $('#lumos-analyzing').hide();
+            $button.prop('disabled', false);
+            $(loadingSelector).hide();
         });
+    }
+
+    // ── SEO Analysis ──────────────────────────────────────────────────────
+    $('#lumos-analyze-btn').on('click', function () {
+        runAnalysis($(this), '#lumos-analyzing');
+    });
+
+    // Schema tab quick analysis update
+    $('#lumos-update-schema-analysis').on('click', function () {
+        runAnalysis($(this), '#lumos-schema-analyzing');
     });
 
     var lastAnalysisData = null;
@@ -341,6 +348,13 @@
     }
 
     function renderServiceSchemaAnalysis(data) {
+        if (!data || !data.seo) {
+            $('#lumos-service-schema-analysis').html(
+                '<div class="lumos-schema-analysis-title">Service Schema Analysis</div>' +
+                '<div class="lumos-hint">Click "Update Analysis" to validate your Service schema.</div>'
+            );
+            return;
+        }
         var checks = (data.seo || []).filter(function (c) {
             return (c.id || '').indexOf('service_schema') === 0;
         });
@@ -616,5 +630,6 @@
     updateSnippet();
     updateOGCard();
     updateTWCard();
+    renderServiceSchemaAnalysis(null);
 
 })(jQuery);
