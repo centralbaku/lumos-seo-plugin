@@ -41,7 +41,7 @@ class Lumos_SEO_Updater {
         exit;
     }
 
-    // ── Fetch update payload (newest of release/tag -> branch head) ───────────
+    // ── Fetch update payload (newest of release/tag only) ────────────────────
     private function fetch_update_payload() {
         $cached = get_transient( $this->cache_key );
         if ( $cached !== false ) return $cached ? $cached : null;
@@ -110,33 +110,6 @@ class Lumos_SEO_Updater {
         }
 
         if ( ! $payload ) {
-            $commit_response = wp_remote_get(
-                'https://api.github.com/repos/' . $this->repo . '/commits/' . $this->branch,
-                array(
-                    'timeout' => 15,
-                    'headers' => array(
-                        'Accept'     => 'application/vnd.github+json',
-                        'User-Agent' => 'WordPress/' . get_bloginfo( 'version' ) . '; ' . home_url(),
-                    ),
-                )
-            );
-            $commit_code = wp_remote_retrieve_response_code( $commit_response );
-            if ( ! is_wp_error( $commit_response ) && $commit_code === 200 ) {
-                $commit = json_decode( wp_remote_retrieve_body( $commit_response ) );
-                $date   = isset( $commit->commit->committer->date ) ? strtotime( $commit->commit->committer->date ) : time();
-                $stamp  = gmdate( 'YmdHis', $date );
-                $sha    = isset( $commit->sha ) ? substr( $commit->sha, 0, 7 ) : '';
-                $msg    = isset( $commit->commit->message ) ? trim( $commit->commit->message ) : '';
-                $payload = (object) array(
-                    'version'      => $this->version . '.' . $stamp,
-                    'package'      => 'https://api.github.com/repos/' . $this->repo . '/zipball/' . $this->branch,
-                    'changelog'    => 'Latest commit (' . $sha . '): ' . $msg,
-                    'last_updated' => isset( $commit->commit->committer->date ) ? $commit->commit->committer->date : '',
-                );
-            }
-        }
-
-        if ( ! $payload ) {
             set_transient( $this->cache_key, false, HOUR_IN_SECONDS );
             return null;
         }
@@ -149,6 +122,11 @@ class Lumos_SEO_Updater {
     public function inject_update( $transient ) {
         if ( ! is_object( $transient ) ) return $transient;
         if ( empty( $transient->checked ) ) return $transient;
+
+        $installed = $this->version;
+        if ( isset( $transient->checked[ $this->plugin_slug ] ) && is_string( $transient->checked[ $this->plugin_slug ] ) ) {
+            $installed = $transient->checked[ $this->plugin_slug ];
+        }
 
         $payload = $this->fetch_update_payload();
         if ( ! $payload || empty( $payload->version ) || empty( $payload->package ) ) return $transient;
@@ -163,7 +141,7 @@ class Lumos_SEO_Updater {
             unset( $transient->no_update[ $this->plugin_slug ] );
         }
 
-        if ( version_compare( $this->version, $remote, '<' ) ) {
+        if ( version_compare( $installed, $remote, '<' ) ) {
             $transient->response[ $this->plugin_slug ] = (object) array(
                 'id'           => 'github.com/' . $this->repo,
                 'slug'         => $this->plugin_folder,
@@ -177,11 +155,15 @@ class Lumos_SEO_Updater {
                 'requires_php' => '7.2',
             );
         } else {
+            // Defensive cleanup: never keep a same-version update response.
+            if ( isset( $transient->response[ $this->plugin_slug ] ) ) {
+                unset( $transient->response[ $this->plugin_slug ] );
+            }
             $transient->no_update[ $this->plugin_slug ] = (object) array(
                 'id'          => 'github.com/' . $this->repo,
                 'slug'        => $this->plugin_folder,
                 'plugin'      => $this->plugin_slug,
-                'new_version' => $this->version,
+                'new_version' => $installed,
                 'url'         => 'https://github.com/' . $this->repo,
                 'package'     => '',
             );

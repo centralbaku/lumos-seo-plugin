@@ -6,6 +6,14 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.10.10] — 2026-04-30
+
+### Fixed
+- **Same-version update loop** — updater no longer falls back to commit-based pseudo-versions, preventing repeated "update available" notices after installing the current release.
+- **Installed version comparison** — update injection now compares against the installed plugin version from WordPress transient data and defensively clears stale same-version responses.
+
+---
+
 ## [1.10.9] — 2026-04-30
 
 ### Fixed
