@@ -244,10 +244,16 @@ class Lumos_SEO_Updater {
     // ── "Check for updates" link in plugin list ───────────────────────────────
     public function action_links( $links ) {
         $check_url = admin_url( 'plugins.php?lumos_seo_force_check=1' );
-        $label     = isset( $_GET['lumos_checked'] )
-            ? '<span style="color:#46b450">&#10003; Checked</span>'
-            : 'Check for updates';
-        array_unshift( $links, '<a href="' . esc_url( $check_url ) . '">' . $label . '</a>' );
+        $is_checked = isset( $_GET['lumos_checked'] ) && $_GET['lumos_checked'] === '1';
+
+        if ( $is_checked ) {
+            $label = '<span class="lumos-updater-checked" style="color:#46b450">&#10003; Checked</span>';
+            $script = '<script>(function(){try{var u=new URL(window.location.href);if(u.searchParams.has("lumos_checked")){u.searchParams.delete("lumos_checked");window.history.replaceState({},document.title,u.pathname+(u.search?u.search:"")+(u.hash?u.hash:""));}}catch(e){}setTimeout(function(){var els=document.querySelectorAll(".lumos-updater-checked");for(var i=0;i<els.length;i++){els[i].textContent="Check for updates";els[i].style.color="";els[i].classList.remove("lumos-updater-checked");}},15000);}());</script>';
+            array_unshift( $links, '<a href="' . esc_url( $check_url ) . '">' . $label . '</a>' . $script );
+            return $links;
+        }
+
+        array_unshift( $links, '<a href="' . esc_url( $check_url ) . '">Check for updates</a>' );
         return $links;
     }
 }

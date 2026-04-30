@@ -28,6 +28,7 @@ $noindex    = $f['_lumos_noindex'];
         <button type="button" class="lumos-mb-tab active" data-tab="seo">SEO</button>
         <button type="button" class="lumos-mb-tab" data-tab="opengraph">Open Graph</button>
         <button type="button" class="lumos-mb-tab" data-tab="twitter">Twitter / X</button>
+        <button type="button" class="lumos-mb-tab" data-tab="schema">Service Schema</button>
         <button type="button" class="lumos-mb-tab" data-tab="advanced">Advanced</button>
     </div>
 
@@ -298,6 +299,37 @@ $noindex    = $f['_lumos_noindex'];
         </div>
 
     </div><!-- /Twitter -->
+
+    <!-- ══════════════════════ SERVICE SCHEMA TAB ═══════════════════════ -->
+    <div class="lumos-mb-panel" id="lumos-tab-schema">
+        <div class="lumos-og-notice">
+            👉 Enable this only when this page represents a <strong>service</strong>. Valid JSON-LD can unlock rich result visibility.
+        </div>
+
+        <div class="lumos-mb-grid">
+            <div class="lumos-mb-field lumos-mb-full">
+                <label class="lumos-checkbox-label">
+                    <input type="checkbox" name="service_schema_enabled" id="lm_service_schema_enabled" value="1"
+                           <?php checked( $f['_lumos_service_schema_enabled'], '1' ); ?>>
+                    <span>Output Service schema on this page</span>
+                </label>
+                <p class="lumos-hint">Turn off if this page is not a service page.</p>
+            </div>
+
+            <div class="lumos-mb-field lumos-mb-full">
+                <div class="lumos-field-header">
+                    <label for="lm_service_schema_json">Service JSON-LD</label>
+                    <button type="button" class="lumos-link-btn" id="lumos-copy-service-schema-prompt">Copy GPT prompt</button>
+                </div>
+                <textarea id="lm_service_schema_json" name="service_schema_json" rows="12"
+                          class="lumos-textarea lumos-code-textarea"
+                          placeholder='{"@context":"https://schema.org","@type":"Service","name":"..."}'><?php echo esc_textarea( $f['_lumos_service_schema_json'] ); ?></textarea>
+                <p class="lumos-hint">Paste JSON only (without &lt;script&gt; tag). You can also import it from a .json file in the Import modal.</p>
+            </div>
+        </div>
+
+        <div id="lumos-service-schema-analysis" class="lumos-schema-analysis"></div>
+    </div><!-- /Service Schema -->
 
     <!-- ══════════════════════ ADVANCED TAB ═════════════════════════════ -->
     <div class="lumos-mb-panel" id="lumos-tab-advanced">

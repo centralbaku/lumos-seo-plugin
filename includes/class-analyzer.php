@@ -28,6 +28,8 @@ class Lumos_SEO_Analyzer {
         $focus_kw   = $args['focus_keyword']    ?? get_post_meta( $post_id, '_lumos_focus_keyword', true );
         $meta_title = $args['meta_title']       ?? get_post_meta( $post_id, '_lumos_meta_title', true ) ?: get_the_title( $post_id );
         $meta_desc  = $args['meta_description'] ?? get_post_meta( $post_id, '_lumos_meta_description', true );
+        $schema_enabled = $args['service_schema_enabled'] ?? get_post_meta( $post_id, '_lumos_service_schema_enabled', true );
+        $schema_json    = $args['service_schema_json']    ?? get_post_meta( $post_id, '_lumos_service_schema_json', true );
         $plain      = wp_strip_all_tags( $content );
 
         $seo_checks  = [];
@@ -62,6 +64,8 @@ class Lumos_SEO_Analyzer {
         $seo_checks[] = $this->check_outbound_links( $content );
         $seo_checks[] = $this->check_images( $content );
         $seo_checks[] = $this->check_single_h1( $content );
+        $seo_checks[] = $this->check_service_schema_enabled( $schema_enabled );
+        $seo_checks[] = $this->check_service_schema_json( $schema_enabled, $schema_json );
 
         // ── Readability checks ─────────────────────────────────────────────
         $read_checks[] = $this->check_flesch( $plain );
@@ -276,6 +280,48 @@ class Lumos_SEO_Analyzer {
         $count = count( $m[0] );
         if ( $count > 1 ) return $this->make( 'single_h1', 'bad', self::HIGH, "Single title: You have {$count} H1 headings. Only use one H1 per page." );
         return $this->make( 'single_h1', 'good', self::HIGH, "Single title: You don't have multiple H1 headings — well done!" );
+    }
+
+    private function check_service_schema_enabled( $enabled ) {
+        if ( $enabled === '1' ) {
+            return $this->make( 'service_schema_toggle', 'good', self::MEDIUM, 'Service schema: Enabled for this page.' );
+        }
+        return $this->make( 'service_schema_toggle', 'ok', self::MEDIUM, 'Service schema: Disabled. Enable only for pages that describe a service.' );
+    }
+
+    private function check_service_schema_json( $enabled, $schema_json ) {
+        if ( $enabled !== '1' ) {
+            return $this->make( 'service_schema_valid', 'ok', self::LOW, 'Service schema validation: Skipped because the feature is disabled.' );
+        }
+        if ( ! is_string( $schema_json ) || trim( $schema_json ) === '' ) {
+            return $this->make( 'service_schema_valid', 'bad', self::HIGH, 'Service schema validation: Enabled but empty. Add valid JSON-LD.' );
+        }
+
+        $schema = json_decode( $schema_json, true );
+        if ( json_last_error() !== JSON_ERROR_NONE || ! is_array( $schema ) ) {
+            return $this->make( 'service_schema_valid', 'bad', self::HIGH, 'Service schema validation: Invalid JSON. Fix syntax before publishing.' );
+        }
+
+        if ( ( $schema['@type'] ?? '' ) !== 'Service' ) {
+            return $this->make( 'service_schema_type', 'bad', self::HIGH, 'Service schema type: @type must be "Service".' );
+        }
+
+        $missing = [];
+        foreach ( [ '@context', 'name', 'description', 'serviceType', 'provider' ] as $field ) {
+            if ( empty( $schema[ $field ] ) ) {
+                $missing[] = $field;
+            }
+        }
+        if ( $missing ) {
+            return $this->make(
+                'service_schema_required_fields',
+                'ok',
+                self::MEDIUM,
+                'Service schema fields: Missing recommended fields — ' . implode( ', ', $missing ) . '.'
+            );
+        }
+
+        return $this->make( 'service_schema_valid', 'good', self::HIGH, 'Service schema validation: JSON-LD is valid and includes key fields.' );
     }
 
     // ── Readability checks ─────────────────────────────────────────────────

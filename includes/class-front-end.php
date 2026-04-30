@@ -11,6 +11,7 @@ class Lumos_SEO_Front_End {
         add_action( 'wp_head', [ $this, 'output_robots' ],       4 );
         add_action( 'wp_head', [ $this, 'output_canonical' ],    5 );
         add_action( 'wp_head', [ $this, 'output_verification' ], 6 );
+        add_action( 'wp_head', [ $this, 'output_service_schema' ], 7 );
         add_filter( 'pre_get_document_title', [ $this, 'filter_document_title' ] );
     }
 
@@ -187,6 +188,23 @@ class Lumos_SEO_Front_End {
     public function output_verification() {
         $code = get_option( 'lumos_seo_google_site_verification' );
         if ( $code ) echo '<meta name="google-site-verification" content="' . esc_attr( $code ) . '">' . "\n";
+    }
+
+    // ── Service schema ─────────────────────────────────────────────────────
+    public function output_service_schema() {
+        if ( ! is_singular() ) return;
+        $id = get_queried_object_id();
+        $enabled = get_post_meta( $id, '_lumos_service_schema_enabled', true );
+        if ( $enabled !== '1' ) return;
+
+        $raw = get_post_meta( $id, '_lumos_service_schema_json', true );
+        if ( ! is_string( $raw ) || trim( $raw ) === '' ) return;
+
+        $schema = json_decode( $raw, true );
+        if ( json_last_error() !== JSON_ERROR_NONE || ! is_array( $schema ) ) return;
+        if ( ( $schema['@type'] ?? '' ) !== 'Service' ) return;
+
+        echo '<script type="application/ld+json">' . wp_json_encode( $schema ) . '</script>' . "\n";
     }
 
     // ── Helpers ────────────────────────────────────────────────────────────

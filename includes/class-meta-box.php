@@ -24,7 +24,24 @@ class Lumos_SEO_Meta_Box {
         // Advanced
         '_lumos_canonical'          => 'esc_url_raw',
         '_lumos_noindex'            => 'sanitize_text_field',
+        '_lumos_service_schema_enabled' => 'sanitize_text_field',
+        '_lumos_service_schema_json'    => 'Lumos_SEO_Meta_Box::sanitize_schema_json',
     ];
+
+    public static function sanitize_schema_json( $value ) {
+        if ( ! is_string( $value ) ) {
+            return '';
+        }
+        $value = trim( wp_unslash( $value ) );
+        if ( $value === '' ) {
+            return '';
+        }
+        $decoded = json_decode( $value, true );
+        if ( json_last_error() !== JSON_ERROR_NONE || ! is_array( $decoded ) ) {
+            return '';
+        }
+        return wp_json_encode( $decoded, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT );
+    }
 
     public function __construct() {
         add_action( 'init',                        [ $this, 'register_meta' ] );
@@ -111,6 +128,26 @@ class Lumos_SEO_Meta_Box {
             // ── Advanced ──────────────────────────────────────────────────
             'canonical'            => 'https://yoursite.com/canonical-url/',
             'noindex'              => false,
+            'use_service_schema'   => true,
+            'service_schema'       => [
+                '@context'    => 'https://schema.org',
+                '@type'       => 'Service',
+                'name'        => 'Middle Corridor Freight Transport',
+                'description' => 'Rail and multimodal freight transport from China to Europe via Azerbaijan and the Caspian Sea.',
+                'provider'    => [
+                    '@type' => 'Organization',
+                    'name'  => 'Alliance Logistics',
+                ],
+                'areaServed'  => [
+                    '@type' => 'Place',
+                    'name'  => 'Europe and Asia',
+                ],
+                'serviceType' => 'Freight Transport',
+                'offers'      => [
+                    '@type'        => 'Offer',
+                    'availability' => 'https://schema.org/InStock',
+                ],
+            ],
             // ── Advisory (shown in UI, not saved to meta) ─────────────────
             'related_keywords'     => [ 'keyword variant', 'another phrase' ],
             'suggested_headings'   => [ 'H2 heading idea', 'Another section heading' ],
@@ -146,6 +183,10 @@ class Lumos_SEO_Meta_Box {
             $post_key = str_replace( 'lumos_', '', $post_key ); // → og_title
             if ( $key === '_lumos_noindex' ) {
                 update_post_meta( $post_id, $key, isset( $_POST['noindex'] ) ? '1' : '' );
+                continue;
+            }
+            if ( $key === '_lumos_service_schema_enabled' ) {
+                update_post_meta( $post_id, $key, isset( $_POST['service_schema_enabled'] ) ? '1' : '' );
                 continue;
             }
             if ( isset( $_POST[ $post_key ] ) ) {
@@ -196,6 +237,8 @@ class Lumos_SEO_Meta_Box {
             'twitter_description'   => '_lumos_twitter_description',
             'twitter_image'         => '_lumos_twitter_image',
             'canonical'             => '_lumos_canonical',
+            'use_service_schema'    => '_lumos_service_schema_enabled',
+            'service_schema'        => '_lumos_service_schema_json',
         ];
 
         $applied  = [];
@@ -225,6 +268,28 @@ class Lumos_SEO_Meta_Box {
             $applied[] = 'noindex';
         }
 
+        if ( array_key_exists( 'use_service_schema', $data ) ) {
+            update_post_meta( $post_id, '_lumos_service_schema_enabled', $data['use_service_schema'] ? '1' : '' );
+            $applied[] = 'use_service_schema';
+        }
+
+        if ( array_key_exists( 'service_schema', $data ) ) {
+            $schema_raw = '';
+            if ( is_array( $data['service_schema'] ) ) {
+                $schema_raw = wp_json_encode( $data['service_schema'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT );
+            } elseif ( is_string( $data['service_schema'] ) ) {
+                $schema_raw = $data['service_schema'];
+            }
+
+            $schema = self::sanitize_schema_json( $schema_raw );
+            if ( $schema ) {
+                update_post_meta( $post_id, '_lumos_service_schema_json', $schema );
+                $applied[] = 'service_schema';
+            } else {
+                $warnings[] = 'service_schema skipped — expected valid JSON object or JSON string.';
+            }
+        }
+
         if ( empty( $applied ) ) wp_send_json_error( 'No recognised SEO fields found in the JSON.' );
 
         $analyzer = new Lumos_SEO_Analyzer();
@@ -247,6 +312,8 @@ class Lumos_SEO_Meta_Box {
             'meta_title'       => sanitize_text_field( $_POST['meta_title']       ?? '' ),
             'meta_description' => sanitize_textarea_field( $_POST['meta_description'] ?? '' ),
             'content'          => isset( $_POST['content'] ) ? wp_kses_post( wp_unslash( $_POST['content'] ) ) : null,
+            'service_schema_enabled' => sanitize_text_field( $_POST['service_schema_enabled'] ?? '' ),
+            'service_schema_json'    => isset( $_POST['service_schema_json'] ) ? wp_unslash( $_POST['service_schema_json'] ) : '',
         ] );
         wp_send_json_success( $result );
     }

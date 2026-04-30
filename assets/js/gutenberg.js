@@ -179,6 +179,8 @@
         twitter_image:       '_lumos_twitter_image',
         canonical:           '_lumos_canonical',
         noindex:             '_lumos_noindex',
+        use_service_schema:  '_lumos_service_schema_enabled',
+        service_schema:      '_lumos_service_schema_json',
     };
 
     function parseImportJson( raw ) {
@@ -369,6 +371,8 @@
         const twImage   = meta._lumos_twitter_image       || '';
         // Advanced
         const noindex   = meta._lumos_noindex             || '';
+        const serviceSchemaEnabled = meta._lumos_service_schema_enabled || '';
+        const serviceSchemaJson    = meta._lumos_service_schema_json || '';
 
         const setMeta = useCallback( ( key, val ) => {
             editPost( { meta: { [ key ]: val } } );
@@ -387,6 +391,8 @@
                 meta_title:       metaTitle || postTitle,
                 meta_description: metaDesc,
                 content:          postContent,
+                service_schema_enabled: serviceSchemaEnabled,
+                service_schema_json:    serviceSchemaJson,
             } )
             .done( function ( res ) {
                 if ( res.success ) setAnalysis( res.data );
@@ -398,7 +404,7 @@
             .always( function () {
                 setLoading( false );
             } );
-        }, [ postId, focusKw, metaTitle, metaDesc, postTitle, postContent ] );
+        }, [ postId, focusKw, metaTitle, metaDesc, postTitle, postContent, serviceSchemaEnabled, serviceSchemaJson ] );
 
         // Debounced auto-analysis when key fields change
         const debouncedRef = useRef( null );
@@ -408,7 +414,7 @@
 
         useEffect( () => {
             if ( focusKw && debouncedRef.current ) debouncedRef.current();
-        }, [ focusKw, postContent, metaTitle, metaDesc ] );
+        }, [ focusKw, postContent, metaTitle, metaDesc, serviceSchemaEnabled, serviceSchemaJson ] );
 
         // ── Group checks ──────────────────────────────────────────────────
         const group = ( checks ) => ( {
@@ -616,6 +622,43 @@
                 ),
                 el( 'p', { style: { fontSize: 12, color: '#999', marginTop: 6 } },
                     'Prevents this page from appearing in search results.'
+                )
+            ),
+
+            // ── Service Schema ─────────────────────────────────────────────
+            el( PanelBody, { title: 'Service Schema', initialOpen: false, className: 'lumos-panel' },
+                el( 'label', { style: { display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', fontSize: 13 } },
+                    el( 'input', {
+                        type: 'checkbox',
+                        checked: serviceSchemaEnabled === '1',
+                        onChange: e => setMeta( '_lumos_service_schema_enabled', e.target.checked ? '1' : '' ),
+                    } ),
+                    'Output Service schema on this page'
+                ),
+                el( 'p', { style: { fontSize: 12, color: '#999', marginTop: 6 } },
+                    'Use only on service pages. Paste JSON-LD object without <script> tags.'
+                ),
+                el( TextareaControl, {
+                    label: 'Service JSON-LD',
+                    value: serviceSchemaJson,
+                    onChange: v => setMeta( '_lumos_service_schema_json', v ),
+                    rows: 10,
+                    __nextHasNoMarginBottom: true,
+                } ),
+                el( 'div', { style: { display: 'flex', justifyContent: 'flex-end', marginTop: 8 } },
+                    el( Button, {
+                        variant: 'secondary',
+                        onClick: () => {
+                            const prompt = [
+                                'Improve this Service schema JSON-LD for SEO and rich results.',
+                                'Return ONLY valid JSON object (no markdown, no <script> tags).',
+                                'Keep @type as "Service" and preserve factual details.',
+                                '',
+                                serviceSchemaJson || '{"@context":"https://schema.org","@type":"Service","name":"..."}',
+                            ].join( '\n' );
+                            navigator.clipboard?.writeText( prompt );
+                        },
+                    }, 'Copy GPT prompt' )
                 )
             )
         );

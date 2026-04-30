@@ -110,6 +110,10 @@
     box-shadow: 0 0 0 2px rgba(34,113,177,.15);
 }
 .lumos-textarea { resize: vertical; min-height: 64px; line-height: 1.5; }
+.lumos-code-textarea {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 12px;
+}
 
 /* ── Hint ─────────────────────────────────────────────────────────────────── */
 .lumos-hint {
@@ -529,8 +533,23 @@ details[open] .lumos-check-group-title::before { transform: rotate(90deg); }
 }
 .lumos-checkbox-label input[type="checkbox"] { margin-top: 1px; flex-shrink: 0; }
 
+.lumos-schema-analysis {
+    margin-top: 10px;
+    border: 1px solid #ebebeb;
+    border-radius: 6px;
+    padding: 8px 10px;
+    background: #fff;
+}
+.lumos-schema-analysis-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #999;
+    margin: 0 0 6px;
+}
+
 /* ── Flash highlight on imported fields ───────────────────────────────────── */
- lumos-flash-anim {
+@keyframes lumos-flash-anim {
     0%, 100% { background-color: transparent; }
     30%       { background-color: #d4f0d4; }
 }

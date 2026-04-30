@@ -19,6 +19,7 @@
         twitter_description: '#lm_twitter_description',
         twitter_image:       '#lm_twitter_image',
         canonical:           '#lm_canonical',
+        service_schema:      '#lm_service_schema_json',
     };
 
     var LENGTH_RULES = {
@@ -161,6 +162,8 @@
             meta_title:       $('#lm_meta_title').val(),
             meta_description: $('#lm_meta_description').val(),
             content:          content,
+            service_schema_enabled: $('#lm_service_schema_enabled').is(':checked') ? '1' : '',
+            service_schema_json:    $('#lm_service_schema_json').val(),
         })
         .done(function (res) {
             if (res.success) renderResults(res.data);
@@ -189,6 +192,7 @@
     var META_FIXABLE_IDS = {
         kw_in_title: true, meta_title_width: true,
         kw_meta_desc: true, meta_desc_length: true,
+        service_schema_toggle: true, service_schema_valid: true, service_schema_type: true, service_schema_required_fields: true,
     };
 
     function buildReportText(data) {
@@ -246,6 +250,15 @@
         lines.push('  "twitter_title": "...", "twitter_description": "...",');
         lines.push('  "canonical": "...",');
         lines.push('  "noindex": false,');
+        lines.push('  "use_service_schema": true,');
+        lines.push('  "service_schema": {');
+        lines.push('    "@context": "https://schema.org",');
+        lines.push('    "@type": "Service",');
+        lines.push('    "name": "...",');
+        lines.push('    "description": "...",');
+        lines.push('    "serviceType": "...",');
+        lines.push('    "provider": { "@type": "Organization", "name": "..." }');
+        lines.push('  },');
         lines.push('  "related_keywords": ["...", "..."],');
         lines.push('  "suggested_headings": ["H2 idea 1", "H2 idea 2"],');
         lines.push('  "content_notes": "bullet list of content edits the writer must make"');
@@ -273,6 +286,7 @@
 
         $('#lumos-checks-seo').html(buildChecklist(data.seo,  'SEO Analysis'));
         $('#lumos-checks-read').html(buildChecklist(data.read, 'Readability'));
+        renderServiceSchemaAnalysis(data);
 
         // Show how many issues JSON can fix vs need content edits
         var allChecks = (data.seo || []).concat(data.read || []);
@@ -326,6 +340,28 @@
         return html;
     }
 
+    function renderServiceSchemaAnalysis(data) {
+        var checks = (data.seo || []).filter(function (c) {
+            return (c.id || '').indexOf('service_schema') === 0;
+        });
+        if (!checks.length) {
+            $('#lumos-service-schema-analysis').html('');
+            return;
+        }
+        var html = '<div class="lumos-schema-analysis-title">Service Schema Analysis</div>';
+        html += '<div class="lumos-check-list">';
+        checks.forEach(function (c) {
+            var pc = PRIORITY_CFG[c.priority] || PRIORITY_CFG.low;
+            html += '<div class="lumos-check-row">';
+            html += '<span class="lumos-dot" style="background:' + (STATUS_DOT[c.status]||'#ccc') + '"></span>';
+            html += '<span class="lumos-check-msg">' + c.message + '</span>';
+            html += '<span class="lumos-prio-badge" style="color:' + pc.color + ';background:' + pc.bg + '">' + pc.label + '</span>';
+            html += '</div>';
+        });
+        html += '</div>';
+        $('#lumos-service-schema-analysis').html(html);
+    }
+
     // ── Import JSON ───────────────────────────────────────────────────────
     var parsedImport = null;
 
@@ -367,6 +403,26 @@
             navigator.clipboard.writeText(lumosSEO.exampleJson).then(function () {
                 $('#lumos-copy-example').text('✓ Copied!');
                 setTimeout(function () { $('#lumos-copy-example').text('Copy example JSON'); }, 2000);
+            });
+        }
+    });
+
+    $('#lumos-copy-service-schema-prompt').on('click', function () {
+        var schema = ($('#lm_service_schema_json').val() || '').trim();
+        var prompt = [
+            'Improve this Service schema JSON-LD for SEO and rich results.',
+            'Return ONLY valid JSON object (no markdown, no <script> tags).',
+            'Keep @type as "Service" and preserve factual details.',
+            '',
+            schema || '{"@context":"https://schema.org","@type":"Service","name":"..."}'
+        ].join('\n');
+
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(prompt).then(function () {
+                $('#lumos-copy-service-schema-prompt').text('✓ Prompt copied');
+                setTimeout(function () {
+                    $('#lumos-copy-service-schema-prompt').text('Copy GPT prompt');
+                }, 2000);
             });
         }
     });
@@ -482,6 +538,9 @@
         Object.keys(FIELD_MAP).forEach(function (jsonKey) {
             if (!(jsonKey in data)) return;
             var val = data[jsonKey];
+            if (jsonKey === 'service_schema' && typeof val === 'object' && val && !Array.isArray(val)) {
+                val = JSON.stringify(val, null, 2);
+            }
             if (typeof val !== 'string') { warnings.push(jsonKey + ' skipped (not a string)'); return; }
             var rule = LENGTH_RULES[jsonKey];
             if (rule && (val.length < rule.min || val.length > rule.max)) {
@@ -495,6 +554,10 @@
         if ('noindex' in data) {
             result._noindex = data.noindex ? '1' : '';
             applied.push('noindex');
+        }
+        if ('use_service_schema' in data) {
+            result._service_schema_enabled = data.use_service_schema ? '1' : '';
+            applied.push('use_service_schema');
         }
 
         ['related_keywords','suggested_headings','content_notes'].forEach(function (k) {
@@ -521,6 +584,9 @@
         // Handle noindex checkbox
         if ('_noindex' in parsed.result) {
             $('input[name="noindex"]').prop('checked', parsed.result._noindex === '1');
+        }
+        if ('_service_schema_enabled' in parsed.result) {
+            $('#lm_service_schema_enabled').prop('checked', parsed.result._service_schema_enabled === '1');
         }
 
         // Switch to the SEO tab to show filled fields
